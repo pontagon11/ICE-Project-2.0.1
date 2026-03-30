@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit purchase requisition</title>
+    <link rel="stylesheet" href="pr edit.css">
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="menu">
+                        <a href="#">Home</a>
+                        <a href="#">Logout</a>
+                    </div>
+                    <div class="profile">
+                        <img src="img/Haro.webp" class="profile-img">
+                        <div>
+                            <p>Profile</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="customer-menu2">
+        <div class="container2"></div>
+    </section>
+
+    <section class="bigname">
+        <div class="container3">
+            <div class="name">
+                <h1>Edit Purchase Requisition</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="mrp-information">
+                <div class="name-job-orders">
+                    <h2>ชื่อ Purchase Requisition</h2>
+                    <input type="text">
+                </div>
+                <div class="pr-details">
+                    <h2>PR DETAILS</h2>
+                    <div class="date-group">
+                        <div class="form-group">
+                            <label for="orderNumber">เลขที่คำสั่งซื้อ</label>
+                            <select id="orderNumber">
+                                <option value="">SELECT</option>
+                                <option value="PO001">PO001</option>
+                                <option value="PO002">PO002</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchaseDate">วันที่สั่งซื้อ</label>
+                            <input type="date" id="purchaseDate" />
+                        </div>
+                        <div class="form-group">
+                            <label for="requiredDate">วันที่ต้องการ</label>
+                            <input type="date" id="requiredDate" />
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ชื่อวัตถุดิบ</th>
+                                <th>จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="กรอกชื่อวัตถุดิบ" /></td>
+                                <td><input type="text" placeholder="จำนวน" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="button-group">
+                        <button class="print">พิมพ์</button>
+                        <button class="refresh">🔄</button>
+                    </div>
+                </div>
+    </section>
+
+    <section class="bottom button">
+        <div class="container5">
+            <div class="wrapper3">
+                <div class="cancel-box">
+                    <button type="submit">Cancel</button>
+                </div>
+                <div class="add-box">
+                    <button type="submit">ADD</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

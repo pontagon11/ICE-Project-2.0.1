@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>receiving withdrawing</title>
+    <link rel="stylesheet" href="stock outsource.css">
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="menu">
+                        <a href="home.html">Home</a>
+                        <a href="login.html">Logout</a>
+                    </div>
+                    <div class="profile">
+                        <img src="img/Haro.webp" class="profile-img">
+                        <div>
+                            <p>Profile</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="customer-menu2">
+        <div class="container2"></div>
+    </section>
+
+    <section class="bigname">
+        <div class="container3">
+            <div class="name">
+                <h1>Stock Outsource</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="stock-outsource-section">
+        <div class="stock-outsource-details">
+            <h3>ประวัติการส่งออก Stock Outsource</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>วันที่</label>
+                    <input type="date" id="input-date">
+                </div>
+                <div class="form-group">
+                    <label>จำนวนชิ้นงานรับเข้า</label>
+                    <input type="number" id="input-receive">
+                </div>
+                <div class="form-group">
+                    <label>หมายเหตุการรับเข้า</label>
+                    <select id="input-receive-note">
+                        <option>SELECT</option>
+                        <option>เพิ่มตามคำสั่งซื้อ</option>
+                        <option>ผลิตเกิน</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>จำนวนชิ้นงานเบิกออก</label>
+                    <select id="input-order-number">
+                        <option>SELECT</option>
+                        <option>PO12345</option>
+                        <option>PO67890</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>หมายเหตุการจ่ายออก(เลือกแบบเดียวกับหมายเหตุการรับเข้า)</label>
+                    <select id="input-receive-note">
+                        <option>SELECT</option>
+                        <option>เพิ่มตามคำสั่งซื้อ</option>
+                        <option>ผลิตเกิน</option>
+                    </select>
+                </div class="form-group">
+                <div>
+                    <label>หมายเหตุเพิ่มเติม</label>
+                    <input type="text" id="input-issue">
+                </div>
+                <div class="full-width">
+                    <button class="add-button" id="add-btn">ADD</button>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>จำนวนรับเข้า</th>
+                        <th>หมายเหตุการรับเข้า</th>
+                        <th>จำนวนชิ้นงานเบิกออก</th>
+                        <th>หมายเหตุการจ่ายออก</th>
+                        <th>Optional Note</th>
+                        <th>EDIT</th>
+                        <th>DELETE</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body">
+                    <!-- ข้อมูลจะถูกเพิ่มที่นี่ -->
+                </tbody>
+            </table>
+
+            <div class="stock-section">
+                <h3>Stock Outsource</h3>
+                <div class="stock-grid">
+                    <div>
+                        <label>Stock Outsource FG</label>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <label>Stock Outsource WIP (FG)</label>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <label>Stock Outsource WIP (PPD)</label>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <label>Stock Outsource NG</label>
+                        <input type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="stock outsource.js"></script>
+        <script src="sidebar.js"></script>
+        <script src="layout.js"></script>
+    </section>
+
+    <section class="bottom button">
+        <div class="container5">
+            <div class="wrapper3">
+                <div class="cancel-box">
+                    <button type="submit">Cancel</button>
+                </div>
+                <div class="add-box">
+                    <button type="submit">ADD</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

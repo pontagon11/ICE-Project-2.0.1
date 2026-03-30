@@ -1,0 +1,235 @@
+:root {
+    --black: black;
+    --blue: blue;
+    --gray: gray;
+    --white: white;
+    --lightblue: #007bff;
+    --darkblue: #1a237e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+
+/* Header Section */
+
+header {
+    background-color: var(--darkblue);
+
+    nav {
+        .nav-wrapper {
+            height: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            .menu {
+
+                a {
+                    margin: 20px;
+                    color: var(--white);
+
+                }
+            }
+
+            .profile {
+                margin: 10px;
+                display: flex;
+                align-items: center;
+                color: var(--white);
+
+                .profile-img {
+                    margin: 10px;
+                    height: 30px;
+                    width: 30px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+}
+
+/* customer-menu2 Section */
+
+.customer-menu2 {
+    background-color: var(--white);
+    overflow: hidden;
+    height: 40px;
+
+}
+
+/* Bigname Section */
+
+.bigname {
+    height: 60px;
+
+    .name {
+        height: 60px;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--darkblue);
+
+        h1 {
+            color: var(--white);
+        }
+    }
+}
+
+/* customer-information Section */
+
+.container4 {
+    width: 100%;
+    height: 510px;
+    margin: 0 auto;
+    background: #fff;
+    overflow: hidden;
+
+    .wrapper2 {
+        height: 560px;
+
+        .name {
+            width: 1400px;
+            height: 100px;
+            display: flex;
+            margin: 0 auto;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            align-items: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+
+            h2 {
+                margin-left: 200px;
+            }
+        }
+
+        .name input[type="text"] {
+            width: 500px;
+            height: 30px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-left: 100px;
+        }
+
+        .company-information {
+            width: 1400px;
+            height: 100px;
+            display: flex;
+            margin: 0 auto;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+
+            h2 {
+                margin: 10px;
+                margin-right: 100px;
+            }
+
+            p {
+                margin: 30px 200px 10px 150px;
+            }
+
+            input[type="text"] {
+                margin-left: 150px;
+                width: 200px;
+                height: 20px;
+                padding: 10px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+        }
+
+        .contact-information {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            width: 1400px;
+            height: 230px;
+            margin: 20px auto 0 auto;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-information h2 {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .contact-information>div {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 45%;
+        }
+
+        .contact-information p {
+            margin-bottom: 10px;
+            margin-left: 300px;
+            margin-right: 50px;
+        }
+
+        .contact-information input {
+            margin-left: 300px;
+            width: 200px;
+            height: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+    }
+}
+
+/* bottom button Section */
+
+.container5 {
+    height: 40px;
+    width: 1400px;
+    margin: auto;
+    align-items: center;
+
+    .wrapper3 {
+        display: flex;
+        justify-content: flex-end;
+
+        .cancel-box {
+
+            button {
+                padding: 12px;
+                background-color: var(--gray);
+                border: none;
+                color: white;
+                font-size: 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+        }
+
+        .add-box {
+
+            button {
+                padding: 12px;
+                background-color: var(--lightblue);
+                border: none;
+                color: white;
+                font-size: 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+        }
+    }
+}
