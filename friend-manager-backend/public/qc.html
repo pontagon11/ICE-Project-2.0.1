@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QC Management</title>
+    <link rel="stylesheet" href="qc.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="menu">
+                    <a href="home.html" id="menuHome">Home</a>
+                    <a href="employee.html" id="menuEmployees">Employees</a>
+                    <a href="manage-permissions.html" id="menuPermissions">Permissions</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                </div>
+                <div class="profile">
+                    <img id="profileImg" class="profile-img">
+                    <span id="username"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <!-- SIDE MENU -->
+    <section class="home-menu2">
+        <div id="sidebarContainer">
+            <ul id="sidebarMenu"></ul>
+        </div>
+    </section>
+
+    <!-- PAGE TITLE -->
+    <section class="bigname">
+        <div class="container3">
+            <div class="name">
+                <h1>Quality Control</h1>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SEARCH BAR -->
+    <div class="container-table">
+
+        <div class="search-box">
+
+            <button type="button" id="addBtn">ADD</button>
+
+            <input type="text" id="searchInput" placeholder="Search name" />
+
+            <select id="typeFilter">
+                <option value="all">All</option>
+                <option value="product">Products</option>
+                <option value="material">Materials</option>
+            </select>
+
+            <button id="searchBtn" type="button" class="btn-primary">
+                Search
+            </button>
+
+        </div>
+
+
+        <!-- QC TABLE -->
+        <table>
+
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>QC By</th>
+                </tr>
+            </thead>
+
+            <tbody id="qcTable">
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="layout.js"></script>
+    <script src="qc.js"></script>
+    <script>
+        checkLogin();
+    </script>
+
+</body>
+
+</html>

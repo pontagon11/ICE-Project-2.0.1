@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee</title>
+    <link rel="stylesheet" href="employee-add.css">
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="menu">
+                    <a href="home.html" id="menuHome">Home</a>
+                    <a href="employee.html" id="menuEmployees">Employees</a>
+                    <a href="manage-permissions.html" id="menuPermissions">Permissions</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                </div>
+                <div class="profile">
+                    <img id="profileImg" class="profile-img">
+                    <span id="username"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="bigname">
+        <div class="container3">
+            <div class="name">
+                <h1>Edit Employee</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="profile-information">
+        <form id="editEmployeeForm">
+            <div class="profile-card">
+
+                <!-- preview รูป -->
+                <div class="image-preview">
+                    <img id="previewImg" alt="preview" style="display:none;">
+                </div>
+
+                <div class="avatar">
+                    <input type="file" id="emp_img" accept="image/*" hidden>
+                    <button type="button" class="image-button" id="chooseImageBtn">
+                        📷 <br> avatar
+                    </button>
+                </div>
+
+                <div class="form-grid">
+                    <div>
+                        <label>ชื่อ</label>
+                        <input type="text" id="emp_fname">
+                    </div>
+                    <div>
+                        <label>นามสกุล</label>
+                        <input type="text" id="emp_lname">
+                    </div>
+                    <div>
+                        <label>บทบาท</label>
+                        <select id="role_id" name="role_id" required>
+                            <option value="">เลือก Role</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>แผนก</label>
+                        <select id="dept_id" name="dept_id" required>
+                            <option value="">เลือกแผนก</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Username</label>
+                        <input type="text" id="emp_username" name="emp_username" required>
+                    </div>
+                    <div class="password-field">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="emp_password">
+                            <span id="toggle-password">👁️</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label>EMAIL</label>
+                        <input type="email" id="emp_email">
+                    </div>
+                    <div>
+                        <label>เบอร์โทร</label>
+                        <input type="tel" id="emp_tel">
+                    </div>
+                    <div>
+                        <label>Status</label>
+                        <select id="emp_status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <section class="bottom button">
+        <div class="container5">
+            <div class="wrapper3">
+                <div class="cancel-box">
+                    <button type="button" id="cancelBtn">Cancel</button>
+                </div>
+
+                <div class="add-box">
+                    <button type="button" id="editBtn">Edit</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="auth.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="layout.js"></script>
+    <script src="employee-edit.js"></script>
+    <script>
+        checkLogin();
+    </script>
+</body>
+
+</html>

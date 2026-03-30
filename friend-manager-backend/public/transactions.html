@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Transactions</title>
+    <link rel="stylesheet" href="transactions.css">
+</head>
+
+<body>
+
+    <!-- ===== TOP NAV ===== -->
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="menu">
+                    <a href="home.html" id="menuHome">Home</a>
+                    <a href="employee.html" id="menuEmployees">Employees</a>
+                    <a href="manage-permissions.html" id="menuPermissions">Permissions</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                </div>
+                <div class="profile">
+                    <img id="profileImg" class="profile-img">
+                    <span id="username"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== SIDEBAR ===== -->
+    <section class="home-menu2">
+        <div id="sidebarContainer">
+            <ul id="sidebarMenu"></ul>
+        </div>
+    </section>
+
+    <!-- ===== TITLE ===== -->
+    <section class="bigname">
+        <div class="container3">
+            <div class="name">
+                <h1>Transactions</h1>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ACTION BAR ===== -->
+    <section class="customer-menu3">
+        <div class="action-bar">
+
+            <div class="add-box">
+                <button type="button" id="addTransactionBtn">+ ADD</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search by No, Item or Type...">
+
+                <select id="itemType">
+                    <option value="">All Item Type</option>
+                    <option value="product">Product</option>
+                    <option value="material">Material</option>
+                </select>
+
+                <select id="typeFilter">
+                    <option value="">All Type</option>
+                    <option value="in">IN</option>
+                    <option value="out">OUT</option>
+                </select>
+
+                <button id="searchBtn" type="button" class="btn-primary">
+                    Search
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== TABLE ===== -->
+    <section class="customer-table">
+        <div class="container5">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>Type</th>
+                        <th>Item Type</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Date</th>
+                        <th>Note</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ===== SCRIPT ===== -->
+    <script src="auth.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="layout.js"></script>
+    <script src="transactions.js"></script>
+    <script>
+        checkLogin();
+    </script>
+
+</body>
+
+</html>

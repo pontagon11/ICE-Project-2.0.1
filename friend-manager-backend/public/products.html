@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products</title>
+    <link rel="stylesheet" href="materials.css">
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="menu">
+                    <a href="home.html" id="menuHome">Home</a>
+                    <a href="employee.html" id="menuEmployees">Employees</a>
+                    <a href="manage-permissions.html" id="menuPermissions">Permissions</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                </div>
+                <div class="profile">
+                    <img id="profileImg" class="profile-img">
+                    <span id="username"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="home-menu2">
+        <div id="sidebarContainer">
+            <ul id="sidebarMenu"></ul>
+        </div>
+    </section>
+
+    <section class="bigname">
+        <div class="container3">
+            <div class="name">
+                <h1>Products</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="customer-menu3">
+        <div class="container4">
+            <div class="add-box">
+                <button type="button" id="addProductBtn">ADD</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
+
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="1">In Stock</option>
+                    <option value="2">Low Stock</option>
+                    <option value="3">Out of Stock</option>
+                    <option value="4">Reserved</option>
+                    <option value="5">Inactive</option>
+                </select>
+
+                <button id="searchBtn" type="button" class="btn-primary">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="customer-table">
+        <div class="container5">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>หมายเลขชิ้นงาน</th>
+                        <th>รูปชิ้นงาน</th>
+                        <th>ชื่อชิ้นงาน</th>
+                        <th>จำนวน(ชิ้น)</th>
+                        <th>ราคา(บาท)</th>
+                        <th>น้ำหนัก</th>
+                        <th>สถานะ</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="products-body"></tbody>
+            </table>
+        </div>
+    </section>
+    <script src="auth.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="layout.js"></script>
+    <script src="products.js"></script>
+    checkLogin();
+    </script>
+</body>
+
+</html>

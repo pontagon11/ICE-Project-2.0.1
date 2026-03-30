@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>stock</title>
+  <link rel="stylesheet" href="stock.css">
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div class="nav-wrapper">
+        <div class="menu">
+          <a href="home.html" id="menuHome">Home</a>
+          <a href="employee.html" id="menuEmployees">Employees</a>
+          <a href="manage-permissions.html" id="menuPermissions">Permissions</a>
+          <a href="#" id="logoutBtn">Logout</a>
+        </div>
+        <div class="profile">
+          <img id="profileImg" class="profile-img">
+          <span id="username"></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="home-menu2">
+    <div id="sidebarContainer">
+      <ul id="sidebarMenu"></ul>
+    </div>
+  </section>
+
+  <section class="customer-menu2">
+    <div class="container2"></div>
+  </section>
+
+  <section class="bigname">
+    <div class="container3">
+      <div class="name">
+        <h1>Stock</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="customer-menu3">
+    <div class="container4">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search item name..." class="search-bar"
+          onkeyup="searchStock()">
+
+        <select id="typeFilter" onchange="searchStock()">
+          <option value="all">All Types</option>
+          <option value="product">Products</option>
+          <option value="material">Materials</option>
+        </select>
+
+        <button onclick="searchStock()">Search</button>
+        <button onclick="loadApprovedPO()" class="btn-approved">Approved PO</button>
+        <button onclick="loadStock()" class="btn-back">Back to Stock</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stock-information">
+    <div class="stock-details">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Item Name</th>
+            <th>Type</th>
+            <th>Stock</th>
+            <th>Unit</th>
+            <th>QC</th>
+          </tr>
+        </thead>
+        <tbody id="stockTable"></tbody>
+      </table>
+    </div>
+  </section>
+  <script src="auth.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="layout.js"></script>
+  <script src="stock.js"></script>
+  <script>
+    checkLogin();
+  </script>
+</body>
+
+</html>

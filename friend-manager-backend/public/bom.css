@@ -1,0 +1,295 @@
+:root {
+  --black: #000;
+  --white: #fff;
+  --gray: #9e9e9e;
+  --lightblue: #007bff;
+  --darkblue: #1a237e;
+}
+
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+}
+
+body {
+  background: #f4f6f9;
+}
+
+/* ================= HEADER ================= */
+header {
+    background-color: var(--darkblue);
+
+    nav {
+        .nav-wrapper {
+            height: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            .menu {
+
+                a {
+                    margin: 20px;
+                    color: var(--white);
+
+                }
+            }
+
+            .profile {
+                margin: 10px;
+                display: flex;
+                align-items: center;
+                color: var(--white);
+
+                .profile-img {
+                    margin: 10px;
+                    height: 30px;
+                    width: 30px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+}
+
+/* ================= TOP MENU ================= */
+ .customer-menu2 {
+    background-color: var(--lightblue);
+    color: var(--white);
+    overflow: hidden;
+    height: 40px;
+
+    .nav-wrapper2 {
+
+        .menu2 {
+            display: flex;
+            list-style: none;
+            justify-content: space-between;
+
+            li {
+                /* border: 1px solid red;  */
+                padding: 10px 20px;
+
+                a {
+                    color: var(--white);
+                    margin: 10px;
+                }
+            }
+        }
+    }
+}
+
+/* ================= PAGE TITLE ================= */
+.bigname {
+    height: 60px;
+
+    .name {
+        height: 60px;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--darkblue);
+
+        h1 {
+            color: var(--white);
+        }
+    }
+}
+
+/* ================= ACTION BAR ================= */
+.customer-menu3 .container4 {
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-box {
+  margin-left: 50px;
+}
+
+.add-box button,
+.search-box button {
+  padding: 10px 18px;
+  background-color: var(--lightblue);
+  border: none;
+  color: white;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-box button:hover,
+.search-box button:hover {
+  background-color: #0069d9;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+}
+
+.search-box .search-bar {
+  width: 220px;
+  padding: 8px 10px;
+  font-size: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* ================= BOM SECTION ================= */
+.bom-section {
+  margin-top: 30px;
+}
+
+.bom-details {
+  width: 100%;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow-x: auto;
+}
+
+/* ================= MAIN TABLE ================= */
+.bom-details table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bom-details th,
+.bom-details td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.bom-details thead th {
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+/* กำหนดความกว้างคอลัมน์หลัก */
+.bom-details th:nth-child(1),
+.bom-details td:nth-child(1) { width: 80px; }
+
+.bom-details th:nth-child(2),
+.bom-details td:nth-child(2) { width: 150px; }
+
+.bom-details th:nth-child(4),
+.bom-details td:nth-child(4),
+.bom-details th:nth-child(5),
+.bom-details td:nth-child(5) { width: 90px; }
+
+/* แถว BOM */
+.bom-header-row {
+  background: #fafafa;
+  font-weight: 500;
+}
+
+/* ================= MATERIAL DETAIL ROW ================= */
+.bom-detail-row td {
+  padding: 15px 20px 20px 40px;
+  background: #ffffff;
+}
+
+/* ================= MATERIAL SUB TABLE ================= */
+.material-table {
+  width: 95%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px #ddd;
+}
+
+.material-table th {
+  background: #e4e4e4;
+  font-weight: bold;
+}
+
+.material-table th,
+.material-table td {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}
+
+.material-table tr:nth-child(even) {
+  background: #f3f3f3;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.action-cell {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #dcdcdc;
+}
+
+.edit-btn:hover {
+  background-color: #c5c5c5;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  margin-left: 6px;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+}
+
+/* ================= SIDEBAR ================= */
+
+#sidebarContainer {
+    background-color: var(--lightblue);
+}
+
+#sidebarMenu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    height: 45px;
+    padding: 0 20px;
+    gap: 15px;
+}
+
+#sidebarMenu li {
+    padding: 8px 12px;
+}
+
+#sidebarMenu li a {
+    color: var(--white);
+    font-size: 14px;
+}
+
+#sidebarMenu li a:hover {
+    background-color: var(--darkblue);
+    border-radius: 5px;
+}
