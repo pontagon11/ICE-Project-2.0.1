@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BOM | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="bom.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-sitemap"></i> Bill of Materials</h1></div>
+  <div class="page-content">
+    <div class="toolbar">
+      <button id="addBomBtn" class="btn-primary"><i class="fa fa-plus"></i> Add BOM</button>
+      <span class="spacer"></span>
+      <div class="search-box">
+        <input type="text" id="bomSearch" placeholder="Search BOM..." />
+        <button class="btn-primary"><i class="fa fa-search"></i></button>
+      </div>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>#</th><th>BOM No</th><th>Product</th><th>Materials</th><th>Actions</th></tr></thead>
+        <tbody id="bomTableBody"><tr><td colspan="5" class="text-center">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="bom.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Employee | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="employee-add.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-user-plus"></i> Add Employee</h1></div>
+  <div class="page-content">
+    <div class="form-card">
+      <div class="photo-section">
+        <img id="previewImg" src="/img/emp/default.png" alt="Preview" class="preview-photo" />
+        <button type="button" id="chooseImageBtn" class="btn-secondary"><i class="fa fa-image"></i> Choose Photo</button>
+        <input type="file" id="emp_img" accept="image/*" style="display:none" />
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="emp_fname" placeholder="First name" /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="emp_lname" placeholder="Last name" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" id="emp_email" placeholder="email@example.com" /></div>
+        <div class="form-group"><label>Tel</label><input type="text" id="emp_tel" placeholder="Phone number" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Username</label><input type="text" id="emp_username" placeholder="Username" /></div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-pw-wrap">
+            <input type="password" id="emp_password" placeholder="Password" />
+            <button type="button" id="toggle-password" class="toggle-pw"><i class="fa fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Department</label><select id="emp_department"><option value="">Select Department</option></select></div>
+        <div class="form-group"><label>Role</label><select id="emp_role"><option value="">Select Role</option></select></div>
+      </div>
+      <div class="form-actions">
+        <button id="saveBtn" class="btn-primary"><i class="fa fa-save"></i> Save</button>
+        <button id="cancelBtn" class="btn-secondary"><i class="fa fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="employee-add.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="home.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-gauge-high"></i> Dashboard</h1></div>
+  <div class="page-content">
+    <!-- Summary Cards -->
+    <div class="card-container">
+      <div class="card">
+        <div class="card-icon"><i class="fa fa-box"></i></div>
+        <div class="card-info">
+          <span class="card-label">Total Products</span>
+          <span class="card-value" id="totalProducts">0</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon mat"><i class="fa fa-layer-group"></i></div>
+        <div class="card-info">
+          <span class="card-label">Total Materials</span>
+          <span class="card-value" id="totalMaterials">0</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon in"><i class="fa fa-arrow-down"></i></div>
+        <div class="card-info">
+          <span class="card-label">Total IN</span>
+          <span class="card-value" id="totalIn">0</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon out"><i class="fa fa-arrow-up"></i></div>
+        <div class="card-info">
+          <span class="card-label">Total OUT</span>
+          <span class="card-value" id="totalOut">0</span>
+        </div>
+      </div>
+    </div>
+    <!-- Chart + Low Stock -->
+    <div class="dashboard-grid">
+      <div class="chart-card">
+        <h3>Monthly IN / OUT</h3>
+        <div class="chart-wrapper"><canvas id="stockChart"></canvas></div>
+      </div>
+      <div class="low-stock-card">
+        <h3>Low Stock Items</h3>
+        <table class="low-stock-table">
+          <thead><tr><th>Item</th><th class="text-right">Qty</th></tr></thead>
+          <tbody id="lowStockTable"><tr><td colspan="2">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="home.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

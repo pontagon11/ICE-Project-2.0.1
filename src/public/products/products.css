@@ -1,0 +1,188 @@
+﻿/* ===== RESET ===== */
+
+/* ===== /* ===== TOP MENU ===== */
+
+.customer-menu2 
+
+.customer-menu2 
+
+.customer-menu2 
+
+/* ===== ACTION BAR ===== */
+.customer-menu3 .container4 {
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-box {
+  margin-left: 50px;
+}
+
+.add-box button {
+  padding: 12px 20px;
+  background-color: var(--lightblue);
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-box {
+  margin-right: 50px;
+}
+
+.search-box .search-bar {
+  width: 200px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.search-box button {
+  padding: 12px 20px;
+  background-color: var(--lightblue);
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== TABLE CONTAINER ===== */
+.container5 {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto 40px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== TABLE ===== */
+.container5 table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.container5 thead {
+  background: #f9f9f9;
+}
+
+.container5 th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #ccc;
+}
+
+.container5 td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* ===== STATUS ===== */
+.status-in-stock {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-processing {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #ffe0b2;
+  color: #ef6c00;
+}
+
+.status-shipped {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.edit-btn,
+.delete-btn {
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-btn {
+  background-color: #e0e0e0;
+}
+
+.edit-btn:hover {
+  background-color: #bdbdbd;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* ===== STATUS 5 แบบ ===== */
+.status-1 {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-2 {
+  background: #fff3e0;
+  color: #ef6c00;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-3 {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-4 {
+  background: #fce4ec;
+  color: #ad1457;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-5 {
+  background: #ffebee;
+  color: #c62828;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.product-table-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}

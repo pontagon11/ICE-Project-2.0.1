@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="products.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-box"></i> Products</h1></div>
+  <div class="page-content">
+    <div class="toolbar">
+      <button id="addProductBtn" class="btn-primary"><i class="fa fa-plus"></i> Add Product</button>
+      <span class="spacer"></span>
+      <input type="text" id="searchInput" placeholder="Search product name..." />
+      <select id="statusFilter"><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+      <button id="searchBtn" class="btn-primary"><i class="fa fa-search"></i> Search</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Price</th><th>Qty</th><th>Weight</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="products-body"><tr><td colspan="8" class="text-center">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="products.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Approve PO | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="approve.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-circle-check"></i> Approve Purchase Orders</h1></div>
+  <div class="page-content">
+    <div class="toolbar">
+      <select id="statusFilter">
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="">All</option>
+      </select>
+      <span class="spacer"></span>
+      <button onclick="window.location.href='/stock/stock.html'" class="btn-secondary"><i class="fa fa-arrow-left"></i> Back to Stock</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>PO No</th><th>Requester</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="approveTable"><tr><td colspan="4" class="text-center">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="approve.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create PO | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="purchase-add.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-file-invoice"></i> Create Purchase Order</h1></div>
+  <div class="page-content">
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group"><label>PO Number</label><input type="text" id="poNo" readonly placeholder="Auto-generated" /></div>
+        <div class="form-group"><label>Note</label><input type="text" id="note" placeholder="Optional note" /></div>
+      </div>
+      <hr style="margin:20px 0;border-color:var(--gray-200)" />
+      <h3 style="font-size:15px;color:var(--gray-700);margin-bottom:14px"><i class="fa fa-list"></i> Add Items</h3>
+      <div class="form-row" style="align-items:flex-end">
+        <div class="form-group" style="flex:2"><label>Material</label><select id="materialSelect"><option value="">Select Material</option></select></div>
+        <div class="form-group"><label>Current Stock</label><div id="currentStockDisplay" class="stock-display">-</div></div>
+        <div class="form-group"><label>Quantity</label><input type="number" id="qtyInput" placeholder="0" min="1" /></div>
+        <button type="button" id="addItemBtn" class="btn-primary" style="margin-bottom:16px"><i class="fa fa-plus"></i> Add</button>
+      </div>
+      <div class="table-card" style="margin-top:0">
+        <table>
+          <thead><tr><th>Material</th><th>Qty</th><th>Remove</th></tr></thead>
+          <tbody id="itemTable"><tr><td colspan="3" class="text-center" style="color:var(--gray-400)">No items added yet</td></tr></tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button id="saveBtn" class="btn-primary"><i class="fa fa-paper-plane"></i> Submit PO</button>
+        <button id="cancelBtn" class="btn-secondary"><i class="fa fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="purchase-add.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

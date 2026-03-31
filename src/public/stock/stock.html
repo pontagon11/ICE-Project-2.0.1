@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="stock.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-boxes-stacked"></i> Stock</h1></div>
+  <div class="page-content">
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="Search item name..." />
+      <select id="typeFilter">
+        <option value="all">All Types</option>
+        <option value="material">Material</option>
+        <option value="product">Product</option>
+      </select>
+      <button id="searchBtn" class="btn-primary"><i class="fa fa-search"></i> Search</button>
+      <span class="spacer"></span>
+      <button onclick="window.location.href='/approve/approve.html'" class="btn-success"><i class="fa fa-check-circle"></i> Approved PO</button>
+      <button onclick="window.location.href='/stock/stock-summary.html'" class="btn-secondary"><i class="fa fa-chart-bar"></i> Stock Summary</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>ID</th><th>Item Name</th><th>Type</th><th>Stock Qty</th><th>Status</th><th>QC Check</th></tr></thead>
+        <tbody id="stockTable"><tr><td colspan="6" class="text-center">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="stock.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

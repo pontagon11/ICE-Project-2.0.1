@@ -1,0 +1,249 @@
+:root {
+  --primary:       #1a237e;
+  --primary-light: #3949ab;
+  --accent:        #1565c0;
+  --white:         #ffffff;
+  --text:          #1e293b;
+  --muted:         #64748b;
+  --light:         #f1f5f9;
+  --border:        #e2e8f0;
+  --error:         #dc2626;
+  --shadow:        0 4px 24px rgba(26,35,126,0.10);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--light);
+}
+
+/* ===== WRAPPER ===== */
+.login-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== LEFT PANEL ===== */
+.left-panel {
+  flex: 0 0 44%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  padding: 48px 40px;
+  box-shadow: 4px 0 32px rgba(0,0,0,0.06);
+  z-index: 1;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 380px;
+}
+
+/* Brand */
+.brand {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.brand-logo {
+  width: 72px;
+  height: auto;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 2px 6px rgba(26,35,126,0.18));
+}
+
+.brand-name {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.2px;
+  margin-bottom: 5px;
+}
+
+.brand-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Form */
+.login-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.toggle-pwd {
+  position: absolute;
+  right: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.toggle-pwd:hover {
+  color: var(--primary);
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 44px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--light);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(21,101,192,0.12);
+}
+
+/* Remember */
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.remember input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.remember label {
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* Error */
+.error-text {
+  color: var(--error);
+  font-size: 13px;
+  margin-bottom: 14px;
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-error {
+  border-color: var(--error) !important;
+}
+
+/* Button */
+.login-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border: none;
+  color: var(--white);
+  font-size: 14.5px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 4px 14px rgba(26,35,126,0.28);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.login-btn:hover {
+  opacity: 0.93;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(26,35,126,0.34);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+
+/* ===== RIGHT PANEL ===== */
+.right-panel {
+  flex: 1;
+  position: relative;
+  background: url("../img/login.jpg") no-repeat center center;
+  background-size: cover;
+}
+
+.right-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 56px 52px;
+}
+
+.right-content h1 {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 14px;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.right-content p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.82);
+  max-width: 360px;
+  line-height: 1.7;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .right-panel {
+    display: none;
+  }
+  .left-panel {
+    flex: 1;
+    padding: 32px 24px;
+  }
+}

@@ -1,0 +1,138 @@
+﻿/* ===== RESET ===== */
+
+/* ===== NAME MATERIAL ===== */
+.name-material {
+  max-width: 1400px;
+  margin: 20px auto;
+  background: var(--white);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.name-material h2 {
+  min-width: 160px;
+}
+
+.name-material input {
+  flex: 1;
+  height: 44px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ===== IMAGE BUTTON ===== */
+.image-button {
+  height: 44px;
+  padding: 0 20px;
+  background: var(--lightblue);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.image-button:hover {
+  background: #0056b3;
+}
+
+/* ===== IMAGE PREVIEW ===== */
+.image-preview {
+  max-width: 1400px;
+  margin: 10px auto 0;
+}
+
+.image-preview img {
+  max-width: 200px;
+  max-height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: block;
+}
+
+/* ===== MATERIAL DETAILS ===== */
+.material-details {
+  max-width: 1400px;
+  margin: 30px auto;
+  background: var(--white);
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.material-details h2 {
+  margin-bottom: 20px;
+}
+
+/* ===== FORM GRID ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 40px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  height: 44px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ===== BOTTOM BUTTON ===== */
+.container5 {
+  max-width: 1400px;
+  margin: 20px auto;
+}
+
+.wrapper3 {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.cancel-box button {
+  height: 44px;
+  padding: 0 24px;
+  background: var(--gray);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-box button:hover {
+  background: #7a7a7a;
+}
+
+.edit-box button {
+  height: 44px;
+  padding: 0 24px;
+  background: var(--lightblue);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.edit-box button:hover {
+  background: #0056b3;
+}

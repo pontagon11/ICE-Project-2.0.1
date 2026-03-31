@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | ICE ERP</title>
+  <link rel="icon" type="image/png" href="/img/logo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/login/login.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div class="login-wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="login-box">
+
+        <div class="brand">
+          <img src="/img/logo.png" alt="ICE ERP Logo" class="brand-logo" />
+          <p class="brand-name">ICE ERP System</p>
+          <p class="brand-sub">Enterprise Resource Planning</p>
+        </div>
+
+        <form id="loginForm" class="login-form" autocomplete="off">
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-wrapper">
+              <i class="fa fa-user input-icon"></i>
+              <input type="text" id="username" name="username" placeholder="Enter your username" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <i class="fa fa-lock input-icon"></i>
+              <input type="password" id="password" name="password" placeholder="Enter your password" required />
+              <button type="button" id="togglePassword" class="toggle-pwd" tabindex="-1">
+                <i class="fa fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <p id="errorMsg" class="error-text" style="display:none;"></p>
+
+          <button type="submit" class="login-btn">
+            <i class="fa fa-right-to-bracket"></i> Sign In
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="right-overlay">
+        <div class="right-content">
+          <h1>Welcome Back</h1>
+          <p>Your integrated ERP platform for seamless business operations and real-time insights.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="/login/login.js"></script>
+</body>
+</html>

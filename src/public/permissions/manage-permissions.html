@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Permissions | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="manage-permissions.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-shield-halved"></i> Manage Permissions</h1></div>
+  <div class="page-content">
+    <div class="toolbar">
+      <label style="font-weight:600;color:var(--gray-700)"><i class="fa fa-user-tag"></i> Select Role:</label>
+      <select id="roleSelect"><option value="">-- Select Role --</option></select>
+    </div>
+    <div id="permList" class="perm-grid">
+      <p style="color:var(--gray-400);padding:20px">Select a role to manage permissions.</p>
+    </div>
+    <div class="perm-actions">
+      <button id="saveBtn" class="btn-primary"><i class="fa fa-save"></i> Save Permissions</button>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="manage-permissions.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>

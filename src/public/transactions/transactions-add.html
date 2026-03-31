@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Transaction | ICE ERP</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/shared/base.css" />
+  <link rel="stylesheet" href="/shared/navbar.css" />
+  <link rel="stylesheet" href="/shared/sidebar.css" />
+  <link rel="stylesheet" href="transactions-add.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/shared/swal.js"></script>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <div id="sidebarContainer"></div>
+  <div class="page-title-bar"><h1><i class="fa fa-plus-circle"></i> Add Transaction</h1></div>
+  <div class="page-content">
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Item Type</label>
+          <select id="tra_item_type">
+            <option value="">Select Type</option>
+            <option value="material">Material</option>
+            <option value="product">Product</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Item</label><select id="tra_item_id"><option value="">Select Item</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Transaction Type</label>
+          <select id="tra_type">
+            <option value="IN">IN (Incoming)</option>
+            <option value="OUT">OUT (Outgoing)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Quantity</label><input type="number" id="tra_qty" placeholder="0" min="1" /></div>
+      </div>
+      <div class="form-group"><label>Note</label><textarea id="tra_note" rows="3" placeholder="Optional note..."></textarea></div>
+      <div class="form-actions">
+        <button id="saveBtn" class="btn-primary"><i class="fa fa-save"></i> Save</button>
+        <button id="cancelBtn" class="btn-secondary"><i class="fa fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script src="/shared/auth.js"></script>
+  <script src="/shared/sidebar.js"></script>
+  <script src="/shared/layout.js"></script>
+  <script src="transactions-add.js"></script>
+  <script>checkLogin();</script>
+</body>
+</html>
