@@ -51,12 +51,15 @@ router.get("/", async (req, res) => {
 router.post("/move", async (req, res) => {
     const { item_id, item_type, move_type, qty, emp_id, remark } = req.body;
     try {
+        // tra_no เป็นคอลัมน์ integer ใน DB จึงใช้ running number แบบตัวเลข
+        const nextNoRes = await pool.query('SELECT COALESCE(MAX(tra_no), 0) + 1 AS next_no FROM transactions');
+        const tra_no = Number(nextNoRes.rows[0].next_no);
+
         const result = await pool.query(
-            `INSERT INTO transactions (item_id, item_type, movement_type, qty, emp_id, remark, created_at) 
-             VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *`,
-            [item_id, item_type, move_type, qty, emp_id, remark]
+            `INSERT INTO transactions (tra_no, tra_item_id, tra_item_type, tra_type, tra_qty, emp_id, tra_note, tra_created_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING *`,
+            [tra_no, item_id, item_type, move_type, qty, emp_id, remark || '']
         );
-        
         res.json({ 
             status: "success", 
             message: `บันทึกรายการ ${move_type} เรียบร้อยแล้ว`,
@@ -72,14 +75,14 @@ router.post("/move", async (req, res) => {
 router.get("/balance/:type/:id", async (req, res) => {
     const { type, id } = req.params;
     try {
-        // ใช้ View v_stock_summary ที่เราทำไว้เพื่อให้ข้อมูลแม่นยำที่สุด
         const result = await pool.query(
-            `SELECT (total_in - total_out) as balance 
-             FROM v_stock_summary 
-             WHERE item_id = $1 AND tra_item_type = $2`,
+            `SELECT
+                COALESCE(SUM(CASE WHEN tra_type = 'IN'  THEN tra_qty ELSE 0 END), 0) -
+                COALESCE(SUM(CASE WHEN tra_type = 'OUT' THEN tra_qty ELSE 0 END), 0) AS balance
+             FROM transactions
+             WHERE tra_item_id = $1 AND tra_item_type = $2`,
             [id, type]
         );
-        
         const balance = result.rows.length > 0 ? result.rows[0].balance : 0;
         res.json({ item_id: id, item_type: type, balance: Number(balance) });
     } catch (err) {

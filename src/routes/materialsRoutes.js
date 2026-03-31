@@ -27,12 +27,10 @@ router.get("/", async (req, res) => {
     try {
         const result = await pool.query(`
             SELECT 
-                mat_id, 
-                mat_no, 
-                mat_name, 
-                mat_qty
+                mat_id, mat_no, mat_name, mat_qty, mat_price,
+                mat_size, mat_weight, mat_status, mat_img, qc_status
             FROM materials 
-            ORDER BY mat_id DESC
+            ORDER BY mat_id ASC
         `);
 
         res.json(result.rows);
@@ -102,6 +100,17 @@ router.put("/:id", upload.single('mat_img'), async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "แก้ไขข้อมูลล้มเหลว" });
+    }
+});
+
+// [DELETE] /:id
+router.delete("/:id", async (req, res) => {
+    try {
+        await pool.query("DELETE FROM materials WHERE mat_id = $1", [req.params.id]);
+        res.json({ message: "ลบวัตถุดิบสำเร็จ" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });
     }
 });
 

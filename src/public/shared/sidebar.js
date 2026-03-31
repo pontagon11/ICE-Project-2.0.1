@@ -71,7 +71,8 @@ let currentUser = null;
 // ==========================================
 function hasPermission(permName) {
   if (!currentUser) return false;
-  if (currentUser.emp_role === 'admin') return true;
+  // Admin (role_id=1) bypasses all permission checks
+  if (currentUser.role_id === 1 || currentUser.emp_role === 'admin') return true;
   if (!currentUser.permissions) return false;
   return currentUser.permissions.some(p =>
     typeof p === 'string' ? p === permName : p.perm_name === permName

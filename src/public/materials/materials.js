@@ -65,14 +65,14 @@ function renderTable(materials) {
 
   let html = "";
   const canEdit = hasPermission("edit_materials");
-  const canDelete = hasPermission("delete_materials");
+  const canDelete = hasPermission("edit_materials");
 
   materials.forEach((m, index) => {
     const status = STATUS_MAP[m.mat_status] || { text: "Unknown", class: "badge-light" };
     
     // ตรวจสอบ Path รูปภาพ
     const imgTag = (m.mat_img && m.mat_img !== "null") 
-      ? `<img src="/img/mat/${m.mat_img}" width="45" height="45" style="object-fit:cover; border-radius:4px;" onerror="this.src='/img/Haro.webp'">`
+      ? `<img src="/img/materials/${m.mat_img}" width="45" height="45" style="object-fit:cover; border-radius:4px;" onerror="this.src='/img/Haro.webp'">`
       : `<div style="width:45px; height:45px; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; color:#aaa;">No Img</div>`;
 
     html += `

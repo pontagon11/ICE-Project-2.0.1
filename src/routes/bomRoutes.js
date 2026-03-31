@@ -10,7 +10,7 @@ router.get("/next-number", isAuthenticated, async (req, res) => {
         const prefix = `BOM-${currentYear}-`;
 
         const result = await pool.query(
-            `SELECT bom_no FROM bom_head 
+            `SELECT bom_no FROM bom_header 
              WHERE bom_no LIKE $1 
              ORDER BY bom_no DESC LIMIT 1`,
             [`${prefix}%`]
@@ -42,7 +42,7 @@ router.get("/", isAuthenticated, async (req, res) => {
                 bh.bom_id, bh.bom_no, 
                 p.pro_no, p.pro_name,
                 bd.mat_id, m.mat_no, m.mat_name, bd.usage_qty
-            FROM bom_head bh
+            FROM bom_header bh
             JOIN products p ON bh.pro_id = p.pro_id
             LEFT JOIN bom_details bd ON bh.bom_id = bd.bom_id
             LEFT JOIN materials m ON bd.mat_id = m.mat_id
@@ -61,7 +61,7 @@ router.get("/:id", isAuthenticated, async (req, res) => {
         const { id } = req.params;
         const head = await pool.query(`
             SELECT bh.*, p.pro_no, p.pro_name 
-            FROM bom_head bh 
+            FROM bom_header bh 
             JOIN products p ON bh.pro_id = p.pro_id 
             WHERE bh.bom_id = $1`, [id]);
 
@@ -89,14 +89,14 @@ router.post("/", isAuthenticated, async (req, res) => {
         // รันเลข BOM No อีกครั้งที่ฝั่ง Server เพื่อความปลอดภัย
         const currentYear = new Date().getFullYear();
         const prefix = `BOM-${currentYear}-`;
-        const numRes = await client.query(`SELECT bom_no FROM bom_head WHERE bom_no LIKE $1 ORDER BY bom_no DESC LIMIT 1`, [`${prefix}%`]);
+        const numRes = await client.query(`SELECT bom_no FROM bom_header WHERE bom_no LIKE $1 ORDER BY bom_no DESC LIMIT 1`, [`${prefix}%`]);
         let nextNum = 1;
         if (numRes.rows.length > 0) nextNum = parseInt(numRes.rows[0].bom_no.split('-')[2]) + 1;
         const bomNo = `${prefix}${nextNum.toString().padStart(4, '0')}`;
 
         // บันทึกหัวสูตร
         const headRes = await client.query(
-            "INSERT INTO bom_head (bom_no, pro_id, created_at) VALUES ($1, $2, NOW()) RETURNING bom_id",
+            "INSERT INTO bom_header (bom_no, pro_id, created_at) VALUES ($1, $2, NOW()) RETURNING bom_id",
             [bomNo, pro_id]
         );
         const bomId = headRes.rows[0].bom_id;
@@ -154,7 +154,7 @@ router.delete("/group/:id", isAuthenticated, async (req, res) => {
     try {
         // เนื่องจากเราตั้ง ON DELETE CASCADE ใน Database ได้ แต่ถ้าไม่ได้ตั้ง ให้ลบสองที่
         await pool.query("DELETE FROM bom_details WHERE bom_id = $1", [id]);
-        await pool.query("DELETE FROM bom_head WHERE bom_id = $1", [id]);
+        await pool.query("DELETE FROM bom_header WHERE bom_id = $1", [id]);
         res.json({ message: "ลบสูตรการผลิตสำเร็จ" });
     } catch (err) {
         res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });

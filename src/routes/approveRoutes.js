@@ -14,14 +14,15 @@ router.get("/pending", isAuthenticated, async (req, res) => {
                 p.po_id, 
                 p.po_no, 
                 p.po_date, 
-                (p.qty * p.unit_price) AS total_amount,
                 p.status,
+                p.tra_note,
                 e.emp_fname || ' ' || e.emp_lname AS requester_name,
-                d.dept_name
+                COALESCE(SUM(pd.qty), 0) AS total_qty
             FROM purchase p
             LEFT JOIN employees e ON p.emp_id = e.emp_id
-            LEFT JOIN departments d ON e.dept_id = d.dept_id
+            LEFT JOIN purchase_detail pd ON p.po_id = pd.po_id
             WHERE p.status = 'PENDING'
+            GROUP BY p.po_id, p.po_no, p.po_date, p.status, p.tra_note, e.emp_fname, e.emp_lname
             ORDER BY p.po_date DESC
         `);
         res.json(result.rows);
@@ -37,7 +38,6 @@ router.get("/pending", isAuthenticated, async (req, res) => {
  */
 router.put("/confirm/:id", isAuthenticated, async (req, res) => {
     const { id } = req.params;
-    const adminId = req.user.id; // ดึง ID ผู้อนุมัติจาก Session (ผ่าน middleware auth)
     const client = await pool.connect();
 
     try {
@@ -53,14 +53,9 @@ router.put("/confirm/:id", isAuthenticated, async (req, res) => {
         if (check.rows[0].status !== 'PENDING') throw new Error("ใบสั่งซื้อนี้ไม่อยู่ในสถานะที่อนุมัติได้");
 
         // 2. อัปเดตสถานะเป็น APPROVED
-        await client.query(`
-            UPDATE purchase 
-            SET 
-                status = 'APPROVED', 
-                approved_by = $1, 
-                approved_at = NOW() 
-            WHERE po_id = $2`, 
-            [adminId, id]
+        await client.query(
+            "UPDATE purchase SET status = 'APPROVED' WHERE po_id = $1",
+            [id]
         );
 
         await client.query("COMMIT");
@@ -82,7 +77,6 @@ router.put("/confirm/:id", isAuthenticated, async (req, res) => {
 router.put("/reject/:id", isAuthenticated, async (req, res) => {
     const { id } = req.params;
     const { reason } = req.body;
-    const adminId = req.user.id;
     const client = await pool.connect();
 
     try {
@@ -91,15 +85,9 @@ router.put("/reject/:id", isAuthenticated, async (req, res) => {
         const check = await client.query("SELECT status FROM purchase WHERE po_id = $1 FOR UPDATE", [id]);
         if (check.rows.length === 0) throw new Error("ไม่พบใบสั่งซื้อ");
 
-        await client.query(`
-            UPDATE purchase 
-            SET 
-                status = 'REJECTED', 
-                tra_note = $1, 
-                approved_by = $2, 
-                approved_at = NOW() 
-            WHERE po_id = $3`, 
-            [reason || 'ถูกปฏิเสธโดยผู้อนุมัติ', adminId, id]
+        await client.query(
+            "UPDATE purchase SET status = 'REJECTED', tra_note = $1 WHERE po_id = $2",
+            [reason || 'ถูกปฏิเสธโดยผู้อนุมัติ', id]
         );
 
         await client.query("COMMIT");

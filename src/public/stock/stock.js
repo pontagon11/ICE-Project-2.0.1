@@ -40,7 +40,7 @@ async function loadStock() {
         if (thead) {
             thead.innerHTML = `
                 <tr>
-                    <th>ID</th>
+                    <th>No</th>
                     <th>Item Name</th>
                     <th>Type</th>
                     <th>Stock Qty</th>
@@ -66,12 +66,12 @@ function renderStockTable(data) {
     if (!tableBody) return;
 
     let html = "";
-    data.forEach(item => {
+    data.forEach((item, index) => {
         const typeClass = item.type === "product" ? "badge-product" : "badge-material";
         
         html += `
             <tr>
-                <td>${item.id}</td>
+                <td>${index + 1}</td>
                 <td><strong>${item.name || "-"}</strong></td>
                 <td><span class="badge ${typeClass}">${item.type}</span></td>
                 <td class="text-right">${Number(item.stock).toLocaleString()}</td>

@@ -1,90 +1,93 @@
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const { isAuthenticated } = require('../middleware/auth');
 
-// --- [GET] ดึงรายการทั้งหมด (สำหรับหน้า qc.html) ---
-router.get("/", async (req, res) => {
+// [GET] / - ดึงรายการ QC ทั้งหมด
+router.get('/', isAuthenticated, async (req, res) => {
     try {
         const result = await pool.query(`
-            SELECT 
-                q.qc_id, 
-                q.qc_no, 
-                q.qc_status, 
-                q.qc_date, 
-                q.item_type,
-                e.emp_fname as emp_name,
-                CASE 
-                    WHEN q.item_type = 'product' THEN (SELECT pro_name FROM products WHERE pro_id = q.item_id)
+            SELECT
+                q.qc_id, q.qc_no, q.qc_status, q.qc_date, q.item_type, q.item_id,
+                e.emp_fname || ' ' || e.emp_lname AS emp_name,
+                CASE
+                    WHEN q.item_type = 'product'  THEN (SELECT pro_name FROM products  WHERE pro_id = q.item_id)
                     WHEN q.item_type = 'material' THEN (SELECT mat_name FROM materials WHERE mat_id = q.item_id)
-                END as name
-            FROM qc_logs q
-            LEFT JOIN employees e ON q.qc_by = e.emp_id
+                END AS name
+            FROM qc q
+            LEFT JOIN employees e ON q.emp_id = e.emp_id
             ORDER BY q.qc_date DESC
         `);
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error fetching QC data" });
+        console.error('GET QC Error:', err.message);
+        res.status(500).json({ message: 'Error fetching QC data' });
     }
 });
 
-// --- [GET] ดึงรายการที่รอตรวจ (Pending จาก PO) ---
-router.get("/pending", async (req, res) => {
+// [GET] /pending - ดึงรายการที่ยังไม่ผ่าน QC
+router.get('/pending', isAuthenticated, async (req, res) => {
     try {
         const result = await pool.query(`
-            SELECT pi.*, p.po_no, m.mat_name, p.po_date
-            FROM purchase_items pi
-            JOIN purchase p ON pi.po_id = p.po_id
-            JOIN materials m ON pi.mat_id = m.mat_id
-            WHERE pi.qc_status = 'PENDING'
-            ORDER BY p.po_date ASC
+            SELECT m.mat_id AS item_id, 'material' AS item_type, m.mat_name AS item_name, m.mat_no AS item_no
+            FROM materials m
+            WHERE NOT EXISTS (SELECT 1 FROM qc WHERE item_id = m.mat_id AND item_type = 'material')
+            UNION ALL
+            SELECT p.pro_id, 'product', p.pro_name, p.pro_no
+            FROM products p
+            WHERE NOT EXISTS (SELECT 1 FROM qc WHERE item_id = p.pro_id AND item_type = 'product')
+            ORDER BY item_type, item_name
         `);
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ message: "Error loading pending items" });
+        res.status(500).json({ message: 'Error loading pending items' });
     }
 });
 
-// --- [POST] บันทึกผลการตรวจสอบ (จากหน้า qc-add.js) ---
-router.post("/", async (req, res) => {
-    const { item_id, item_type, emp_id, qc_note, po_id } = req.body;
-    
+// [POST] / - สร้างรายการ QC ใหม่
+router.post('/', isAuthenticated, async (req, res) => {
+    const { item_id, item_type, emp_id, qc_note } = req.body;
     try {
         // สร้างเลข QC อัตโนมัติ
-        const countRes = await pool.query("SELECT COUNT(*) FROM qc_logs");
-        const qc_no = `QC-${new Date().getFullYear()}-${(parseInt(countRes.rows[0].count) + 1).toString().padStart(4, '0')}`;
+        const countRes = await pool.query('SELECT COUNT(*) FROM qc');
+        const seq = parseInt(countRes.rows[0].count) + 1;
+        const qc_no = `QC-${new Date().getFullYear()}-${seq.toString().padStart(4, '0')}`;
 
         const result = await pool.query(
-            `INSERT INTO qc_logs (qc_no, item_id, item_type, qc_status, qc_note, qc_by, po_id, qc_date) 
-             VALUES ($1, $2, $3, 'wait', $4, $5, $6, NOW()) RETURNING *`,
-            [qc_no, item_id, item_type, qc_note, emp_id, po_id || null]
+            `INSERT INTO qc (qc_no, item_id, item_type, qc_status, emp_id, qc_date)
+             VALUES ($1, $2, $3, 'wait', $4, NOW()) RETURNING *`,
+            [qc_no, item_id, item_type, emp_id]
         );
-
-        res.json({ message: "บันทึกรายการตรวจสอบสำเร็จ", qc_id: result.rows[0].qc_id });
+        res.json({ message: 'บันทึกรายการตรวจสอบสำเร็จ', qc: result.rows[0] });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "ไม่สามารถสร้างรายการ QC ได้" });
+        console.error('POST QC:', err.message);
+        res.status(500).json({ message: err.message });
     }
 });
 
-// --- [PUT] อัปเดตผล PASS/FAIL (จากหน้า qc.js) ---
-router.put("/pass/:id", async (req, res) => {
+// [PUT] /:id - อัปเดตผล QC (pass / fail)
+router.put('/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
+    const { qc_status } = req.body;
     try {
-        await pool.query("UPDATE qc_logs SET qc_status = 'pass' WHERE qc_id = $1", [id]);
-        res.json({ message: "Status updated to PASS" });
+        await pool.query(
+            'UPDATE qc SET qc_status = $1 WHERE qc_id = $2',
+            [qc_status, id]
+        );
+        res.json({ message: 'อัปเดตผล QC สำเร็จ' });
     } catch (err) {
-        res.status(500).json({ message: "Error updating status" });
+        res.status(500).json({ message: 'Error updating QC' });
     }
 });
 
-router.put("/fail/:id", async (req, res) => {
+// [DELETE] /:id - ลบรายการ QC
+router.delete('/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     try {
-        await pool.query("UPDATE qc_logs SET qc_status = 'fail' WHERE qc_id = $1", [id]);
-        res.json({ message: "Status updated to FAIL" });
+        await pool.query('DELETE FROM qc WHERE qc_id = $1', [id]);
+        res.json({ message: 'ลบสำเร็จ' });
     } catch (err) {
-        res.status(500).json({ message: "Error updating status" });
+        res.status(500).json({ message: 'ลบไม่สำเร็จ' });
     }
 });
 

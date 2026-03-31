@@ -10,19 +10,22 @@ router.get("/", async (req, res) => {
     // หมายเหตุ: ปรับชื่อตารางจาก stock_movement เป็น transactions (ให้มี s ตามมาตรฐานที่เราใช้ก่อนหน้า)
     let query = `
         SELECT 
-            sm.move_id,
-            sm.created_at AS move_date,
-            sm.movement_type AS move_type,
-            sm.qty,
-            sm.remark,
-            sm.item_type,
+            t.tra_id,
+            t.tra_type,
+            t.tra_item_type,
+            t.tra_item_id,
+            t.tra_qty,
+            t.tra_note,
+            t.tra_created_at,
+            t.tra_no,
+            t.emp_id,
             e.emp_fname || ' ' || e.emp_lname AS staff_name,
             COALESCE(p.pro_name, m.mat_name) AS item_name,
-            COALESCE(p.pro_unit, m.mat_unit) AS unit
-        FROM transactions sm
-        LEFT JOIN employees e ON sm.emp_id = e.emp_id
-        LEFT JOIN products p ON sm.item_id = p.pro_id AND sm.item_type = 'product'
-        LEFT JOIN materials m ON sm.item_id = m.mat_id AND sm.item_type = 'material'
+            COALESCE(p.pro_no, m.mat_no) AS item_no
+        FROM transactions t
+        LEFT JOIN employees e ON t.emp_id = e.emp_id
+        LEFT JOIN products p ON t.tra_item_id = p.pro_id AND t.tra_item_type = 'product'
+        LEFT JOIN materials m ON t.tra_item_id = m.mat_id AND t.tra_item_type = 'material'
         WHERE 1=1
     `;
 
@@ -31,22 +34,22 @@ router.get("/", async (req, res) => {
 
     // 🔍 ระบบกรองข้อมูล (Dynamic Filtering)
     if (startDate && endDate) {
-        query += ` AND sm.created_at::date BETWEEN $${counter} AND $${counter + 1}`;
+        query += ` AND t.tra_created_at::date BETWEEN $${counter} AND $${counter + 1}`;
         values.push(startDate, endDate);
         counter += 2;
     }
     if (itemType && itemType !== 'all') {
-        query += ` AND sm.item_type = $${counter}`;
+        query += ` AND t.tra_item_type = $${counter}`;
         values.push(itemType);
         counter++;
     }
     if (moveType && moveType !== 'all') {
-        query += ` AND sm.movement_type = $${counter}`;
+        query += ` AND t.tra_type = $${counter}`;
         values.push(moveType);
         counter++;
     }
 
-    query += ` ORDER BY sm.created_at DESC`;
+    query += ` ORDER BY t.tra_created_at DESC`;
 
     try {
         const result = await pool.query(query, values);
@@ -62,11 +65,11 @@ router.get("/item/:type/:id", async (req, res) => {
     const { type, id } = req.params;
     try {
         const result = await pool.query(`
-            SELECT sm.*, e.emp_fname 
-            FROM transactions sm
-            JOIN employees e ON sm.emp_id = e.emp_id
-            WHERE sm.item_type = $1 AND sm.item_id = $2
-            ORDER BY sm.created_at DESC
+            SELECT t.*, e.emp_fname 
+            FROM transactions t
+            LEFT JOIN employees e ON t.emp_id = e.emp_id
+            WHERE t.tra_item_type = $1 AND t.tra_item_id = $2
+            ORDER BY t.tra_created_at DESC
         `, [type, id]);
         res.json(result.rows);
     } catch (err) {

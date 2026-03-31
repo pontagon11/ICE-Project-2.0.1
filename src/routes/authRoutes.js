@@ -62,21 +62,29 @@ router.get("/me", async (req, res) => {
             const roleId = req.session.user.role || req.session.user.role_id;
 
             // 3. Query ดึงชื่อสิทธิ์
-            const permsResult = await pool.query(`
-                SELECT p.perm_name 
-                FROM public.role_permissions rp
-                JOIN public.permissions p ON rp.perm_id = p.perm_id
-                WHERE rp.role_id = $1
-            `, [roleId]);
-
-            const permsArray = permsResult.rows.map(row => row.perm_name);
+            // Admin (role_id=1) gets ALL permissions
+            let permsArray;
+            if (roleId === 1 || roleId === '1') {
+                const allPerms = await pool.query(`SELECT perm_name FROM public.permissions`);
+                permsArray = allPerms.rows.map(row => row.perm_name);
+            } else {
+                const permsResult = await pool.query(`
+                    SELECT p.perm_name 
+                    FROM public.role_permissions rp
+                    JOIN public.permissions p ON rp.perm_id = p.perm_id
+                    WHERE rp.role_id = $1
+                `, [roleId]);
+                permsArray = permsResult.rows.map(row => row.perm_name);
+            }
 
             res.json({
                 loggedIn: true,
+                emp_id: req.session.user.id,
                 emp_username: req.session.user.username,
                 emp_fname: req.session.user.fname || "",
                 emp_lname: req.session.user.lname || "",
                 emp_img: req.session.user.emp_img || "",
+                role_id: req.session.user.role || req.session.user.role_id || 0,
                 permissions: permsArray
             });
         } catch (err) {

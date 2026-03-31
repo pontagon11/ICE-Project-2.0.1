@@ -4,12 +4,17 @@ const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const { isAuthenticated } = require('../middleware/auth');
 
 // --- ตั้งค่าการเก็บรูปภาพ ---
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads/employees/');
+        const dir = path.join(__dirname, '..', 'uploads', 'employees');
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

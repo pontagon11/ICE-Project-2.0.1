@@ -15,7 +15,7 @@ function isAuthenticated(req, res, next) {
         });
     } else {
         // ถ้าเป็นคนพิมพ์ URL เข้ามาตรงๆ ให้เด้งไปหน้า Login ทันที
-        return res.redirect('/login.html');
+        return res.redirect('/');
     }
 }
 

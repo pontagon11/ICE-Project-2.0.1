@@ -33,9 +33,9 @@ async function checkLogin() {
         const permStrings = Array.isArray(user.permissions) ? user.permissions : [];
 
         localStorage.setItem("permissions", JSON.stringify(permStrings));
-        localStorage.setItem("role", user.role_id || "");
+        localStorage.setItem("role", user.role_id ? String(user.role_id) : "");
         localStorage.setItem("username", user.emp_fname || "User");
-        localStorage.setItem("emp_id", user.emp_id || "");
+        localStorage.setItem("emp_id", user.emp_id ? String(user.emp_id) : "");
 
         return user;
 

@@ -36,7 +36,8 @@ const checkAuth = (req, res, next) => {
     if (req.session && req.session.user) {
         next();
     } else {
-        if (req.path.startsWith('/api') || req.xhr || req.headers.accept.indexOf('json') > -1) {
+        const acceptHeader = req.headers.accept || '';
+        if (req.path.startsWith('/api') || req.xhr || acceptHeader.includes('json')) {
             return res.status(401).json({ message: "กรุณาล็อกอิน" });
         }
         res.redirect('/');

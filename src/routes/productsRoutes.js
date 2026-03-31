@@ -113,4 +113,15 @@ router.put("/:id", upload.single('pro_img'), async (req, res) => {
     }
 });
 
+// [DELETE] /:id
+router.delete("/:id", async (req, res) => {
+    try {
+        await pool.query("DELETE FROM products WHERE pro_id = $1", [req.params.id]);
+        res.json({ message: "ลบสินค้าสำเร็จ" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });
+    }
+});
+
 module.exports = router;
