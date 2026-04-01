@@ -3,6 +3,19 @@ const router = express.Router();
 const pool = require('../config/db');
 const { isAuthenticated } = require('../middleware/auth'); // อย่าลืมใส่ middleware กันคนนอกเข้า
 
+// [GET] / - ดึง permissions ทั้งหมด
+router.get("/", isAuthenticated, async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT perm_id, perm_name FROM permissions ORDER BY perm_id ASC"
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Fetch permissions list error:", err);
+        res.status(500).json({ message: "ไม่สามารถดึงรายการสิทธิ์ทั้งหมดได้" });
+    }
+});
+
 // [GET] /roles - ดึงรายการ Roles ทั้งหมด
 router.get("/roles", isAuthenticated, async (req, res) => {
     try {

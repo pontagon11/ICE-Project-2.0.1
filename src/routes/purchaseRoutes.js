@@ -98,16 +98,28 @@ router.put("/receive/:id", async (req, res) => {
         // 2. อัปเดตสถานะเป็น 'received'
         await client.query("UPDATE purchase SET status = 'RECEIVED' WHERE po_id = $1", [id]);
 
-        // 3. เพิ่มข้อมูลลง transactions (เพื่อให้ View v_stock_balance คำนวณสต็อกใหม่)
+        // 3. เพิ่มข้อมูลลง transactions (ใช้คอลัมน์จริงของตาราง transactions)
         const itemsRes = await client.query("SELECT mat_id, qty FROM purchase_detail WHERE po_id = $1", [id]);
+        const poHeadRes = await client.query("SELECT emp_id FROM purchase WHERE po_id = $1", [id]);
+        const empId = poHeadRes.rows[0]?.emp_id || null;
+
+        const nextNoRes = await client.query("SELECT COALESCE(MAX(tra_no), 0) AS max_no FROM transactions");
+        let nextTraNo = Number(nextNoRes.rows[0].max_no) + 1;
 
         const moveQuery = `
-            INSERT INTO transactions (item_id, item_type, movement_type, qty, ref_id) 
-            VALUES ($1, 'material', 'IN', $2, $3)
+            INSERT INTO transactions (tra_no, tra_item_id, tra_item_type, tra_type, tra_qty, emp_id, tra_note, tra_created_at)
+            VALUES ($1, $2, 'material', 'IN', $3, $4, $5, NOW())
         `;
 
         for (let item of itemsRes.rows) {
-            await client.query(moveQuery, [item.mat_id, item.qty, id]);
+            await client.query(moveQuery, [
+                nextTraNo,
+                item.mat_id,
+                item.qty,
+                empId,
+                `Receive from PO #${id}`
+            ]);
+            nextTraNo += 1;
         }
 
         await client.query("COMMIT");

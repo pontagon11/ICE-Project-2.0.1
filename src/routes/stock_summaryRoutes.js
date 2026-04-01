@@ -7,18 +7,17 @@ router.get("/", async (req, res) => {
     try {
         const result = await pool.query(`
             SELECT 
-                item_id,
-                item_type AS tra_item_type,
-                CASE 
-                    WHEN item_type = 'material' THEN (SELECT mat_name FROM materials WHERE mat_id = item_id)
-                    WHEN item_type = 'product' THEN (SELECT pro_name FROM products WHERE pro_id = item_id)
-                END AS item_name,
-                SUM(CASE WHEN movement_type = 'IN' THEN qty ELSE 0 END) AS total_in,
-                SUM(CASE WHEN movement_type = 'OUT' THEN qty ELSE 0 END) AS total_out,
-                (SUM(CASE WHEN movement_type = 'IN' THEN qty ELSE 0 END) - 
-                 SUM(CASE WHEN movement_type = 'OUT' THEN qty ELSE 0 END)) AS balance
-            FROM transactions
-            GROUP BY item_id, item_type
+                t.tra_item_id AS item_id,
+                t.tra_item_type AS tra_item_type,
+                COALESCE(p.pro_name, m.mat_name) AS item_name,
+                SUM(CASE WHEN t.tra_type = 'IN' THEN t.tra_qty ELSE 0 END) AS total_in,
+                SUM(CASE WHEN t.tra_type = 'OUT' THEN t.tra_qty ELSE 0 END) AS total_out,
+                (SUM(CASE WHEN t.tra_type = 'IN' THEN t.tra_qty ELSE 0 END) - 
+                 SUM(CASE WHEN t.tra_type = 'OUT' THEN t.tra_qty ELSE 0 END)) AS balance
+            FROM transactions t
+            LEFT JOIN products p ON t.tra_item_type = 'product' AND t.tra_item_id = p.pro_id
+            LEFT JOIN materials m ON t.tra_item_type = 'material' AND t.tra_item_id = m.mat_id
+            GROUP BY t.tra_item_id, t.tra_item_type, p.pro_name, m.mat_name
             ORDER BY tra_item_type, item_name
         `);
         res.json(result.rows);
@@ -33,20 +32,14 @@ router.get("/materials", async (req, res) => {
     try {
         const result = await pool.query(`
             SELECT 
-                m.mat_id, m.mat_name, m.mat_unit, m.mat_min_qty,
-                COALESCE(v.total_in - v.total_out, 0) as current_qty,
+                m.mat_id, m.mat_name, m.mat_status,
+                COALESCE(v.balance, 0) as current_qty,
                 CASE 
-                    WHEN COALESCE(v.total_in - v.total_out, 0) <= m.mat_min_qty THEN 'LOW'
+                    WHEN COALESCE(v.balance, 0) < 10 THEN 'LOW'
                     ELSE 'OK'
                 END as stock_status
             FROM materials m
-            LEFT JOIN (
-                SELECT item_id, 
-                       SUM(CASE WHEN movement_type = 'IN' THEN qty ELSE 0 END) as total_in,
-                       SUM(CASE WHEN movement_type = 'OUT' THEN qty ELSE 0 END) as total_out
-                FROM transactions WHERE item_type = 'material'
-                GROUP BY item_id
-            ) v ON m.mat_id = v.item_id
+            LEFT JOIN v_stock_balance v ON m.mat_id = v.item_id AND v.item_type = 'material'
             ORDER BY stock_status DESC, m.mat_name ASC
         `);
         res.json(result.rows);
@@ -60,17 +53,11 @@ router.get("/products", async (req, res) => {
     try {
         const result = await pool.query(`
             SELECT 
-                p.pro_id, p.pro_name, p.pro_price, p.pro_unit,
-                COALESCE(v.total_in - v.total_out, 0) as current_qty,
-                (COALESCE(v.total_in - v.total_out, 0) * p.pro_price) as total_value
+                p.pro_id, p.pro_name, p.pro_price, p.pro_status,
+                COALESCE(v.balance, 0) as current_qty,
+                (COALESCE(v.balance, 0) * p.pro_price) as total_value
             FROM products p
-            LEFT JOIN (
-                SELECT item_id, 
-                       SUM(CASE WHEN movement_type = 'IN' THEN qty ELSE 0 END) as total_in,
-                       SUM(CASE WHEN movement_type = 'OUT' THEN qty ELSE 0 END) as total_out
-                FROM transactions WHERE item_type = 'product'
-                GROUP BY item_id
-            ) v ON p.pro_id = v.item_id
+            LEFT JOIN v_stock_balance v ON p.pro_id = v.item_id AND v.item_type = 'product'
             ORDER BY p.pro_name ASC
         `);
         res.json(result.rows);
@@ -83,25 +70,19 @@ router.get("/products", async (req, res) => {
 router.get("/reorder-list", async (req, res) => {
     try {
         const result = await pool.query(`
-            SELECT 'material' as type, mat_name as name, mat_min_qty as min, 
+            SELECT 'material' as type, m.mat_name as name, 10 as min, 
                    COALESCE(v.balance, 0) as current
             FROM materials m
-            LEFT JOIN (
-                SELECT item_id, SUM(CASE WHEN movement_type = 'IN' THEN qty ELSE -qty END) as balance
-                FROM transactions WHERE item_type = 'material' GROUP BY item_id
-            ) v ON m.mat_id = v.item_id
-            WHERE COALESCE(v.balance, 0) <= m.mat_min_qty
+            LEFT JOIN v_stock_balance v ON m.mat_id = v.item_id AND v.item_type = 'material'
+            WHERE COALESCE(v.balance, 0) < 10
             
             UNION ALL
             
-            SELECT 'product' as type, pro_name as name, pro_min_qty as min, 
+            SELECT 'product' as type, p.pro_name as name, 10 as min, 
                    COALESCE(v.balance, 0) as current
             FROM products p
-            LEFT JOIN (
-                SELECT item_id, SUM(CASE WHEN movement_type = 'IN' THEN qty ELSE -qty END) as balance
-                FROM transactions WHERE item_type = 'product' GROUP BY item_id
-            ) v ON p.pro_id = v.item_id
-            WHERE COALESCE(v.balance, 0) <= p.pro_min_qty
+            LEFT JOIN v_stock_balance v ON p.pro_id = v.item_id AND v.item_type = 'product'
+            WHERE COALESCE(v.balance, 0) < 10
         `);
         res.json(result.rows);
     } catch (err) {

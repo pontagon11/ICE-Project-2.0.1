@@ -1,7 +1,7 @@
 ﻿/* ==========================================
  CONFIG & API ENDPOINTS
 ========================================== */
-const API_ROLES = "/roles";
+const API_ROLES = "/permissions/roles";
 const API_PERMS = "/permissions";
 
 let allPermissions = []; // เก็บสิทธิ์ทั้งหมดที่โหลดจาก DB
@@ -78,9 +78,9 @@ async function loadRolePermissions(roleId) {
     try {
         const res = await fetch(`/roles/${roleId}/permissions`, { credentials: "include" });
         const rolePerms = await res.json();
-        const selectedIds = rolePerms.map(p => p.perm_id);
+        const selectedPermNames = Array.isArray(rolePerms) ? rolePerms : [];
 
-        renderPermissions(selectedIds);
+        renderPermissions(selectedPermNames);
     } catch (err) {
         console.error("Load role perms error:", err);
     }
@@ -89,7 +89,7 @@ async function loadRolePermissions(roleId) {
 /* ==========================================
  RENDERING (UI GENERATION)
 ========================================== */
-function renderPermissions(selectedIds = []) {
+function renderPermissions(selectedPermNames = []) {
     const container = document.getElementById("permList");
     if (!container) return;
     container.innerHTML = "";
@@ -119,7 +119,7 @@ function renderPermissions(selectedIds = []) {
             const perm = allPermissions.find(p => p.perm_name === pName);
             if (!perm) return;
 
-            const isChecked = selectedIds.includes(perm.perm_id);
+            const isChecked = selectedPermNames.includes(perm.perm_name);
             const col = document.createElement("div");
             col.className = "col-md-4 col-sm-6 mb-2"; // แบ่ง 3 คอลัมน์บนจอใหญ่
             col.innerHTML = `
@@ -191,8 +191,11 @@ async function savePermissions() {
  HELPERS
 ========================================== */
 function hasPermission(name) {
-    const perms = JSON.parse(localStorage.getItem("permissions")) || [];
-    return perms.some(p => p.perm_name === name);
+    const roleId = Number(localStorage.getItem("role") || 0);
+    if (roleId === 1) return true;
+
+    const perms = JSON.parse(localStorage.getItem("permissions") || "[]");
+    return perms.some(p => (typeof p === "string" ? p === name : p.perm_name === name));
 }
 
 function formatName(name) {

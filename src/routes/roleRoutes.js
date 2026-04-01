@@ -22,4 +22,33 @@ router.get('/:id/permissions', async (req, res) => {
     }
 });
 
+router.put('/:id/permissions', async (req, res) => {
+    const roleId = req.params.id;
+    const permissions = Array.isArray(req.body.permissions) ? req.body.permissions : [];
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        await client.query('DELETE FROM public.role_permissions WHERE role_id = $1', [roleId]);
+
+        if (permissions.length > 0) {
+            await client.query(
+                `INSERT INTO public.role_permissions (role_id, perm_id)
+                 SELECT $1, UNNEST($2::int[])`,
+                [roleId, permissions]
+            );
+        }
+
+        await client.query('COMMIT');
+        res.json({ message: 'Permissions updated successfully' });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Error updating role permissions:', err.message);
+        res.status(500).json({ message: 'Server Error' });
+    } finally {
+        client.release();
+    }
+});
+
 module.exports = router;

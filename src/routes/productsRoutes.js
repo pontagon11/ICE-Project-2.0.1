@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
         const result = await pool.query(`
             SELECT 
                 p.*, 
-                COALESCE(v.net_quantity, 0) as pro_qty -- ปรับ alias ให้ตรงกับหน้าบ้านที่ใช้ p.pro_qty
+                COALESCE(v.balance, 0) as pro_qty -- ใช้คอลัมน์จริงจาก v_stock_balance
             FROM products p
             LEFT JOIN v_stock_balance v ON p.pro_id = v.item_id AND v.item_type = 'product'
             ORDER BY p.pro_id DESC

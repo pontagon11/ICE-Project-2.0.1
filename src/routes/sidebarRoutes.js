@@ -42,19 +42,19 @@ router.get("/badges", async (req, res) => {
                 -- นับจำนวน PO ที่สถานะเป็น pending
                 (SELECT COUNT(*) FROM purchase WHERE status = 'pending') AS pending_po,
                 
-                -- นับจำนวนสินค้า/วัตถุดิบที่ยอดคงเหลือ (จาก View) ต่ำกว่าจุดสั่งซื้อ (Min Qty)
+                -- นับจำนวนสินค้า/วัตถุดิบที่ยอดคงเหลือ (จาก View) ต่ำกว่าเกณฑ์
                 (
                     SELECT COUNT(*) 
                     FROM (
                         SELECT m.mat_id 
                         FROM materials m
                         LEFT JOIN v_stock_balance v ON m.mat_id = v.item_id AND v.item_type = 'material'
-                        WHERE COALESCE(v.net_quantity, 0) <= m.mat_min_qty
+                        WHERE COALESCE(v.balance, 0) < 10
                         UNION ALL
                         SELECT p.pro_id 
                         FROM products p
                         LEFT JOIN v_stock_balance v ON p.pro_id = v.item_id AND v.item_type = 'product'
-                        WHERE COALESCE(v.net_quantity, 0) <= p.pro_min_qty
+                        WHERE COALESCE(v.balance, 0) < 10
                     ) AS low_items
                 ) AS low_stock_count
         `);
