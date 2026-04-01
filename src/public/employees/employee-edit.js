@@ -69,7 +69,7 @@ async function loadEmployee(id) {
         if (data.emp_img) {
             const previewImg = document.getElementById("previewImg");
             // ปรับ Path รูปภาพให้ตรงกับที่เก็บใน Server
-            previewImg.src = `/uploads/employees/${data.emp_img}`; 
+            previewImg.src = `/img/emp/${data.emp_img}`; 
             previewImg.style.display = "block";
         }
 

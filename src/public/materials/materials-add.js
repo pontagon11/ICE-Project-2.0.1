@@ -2,25 +2,16 @@
 
     /* ================= INITIALIZATION ================= */
     // ตรวจสอบ Login และสิทธิ์ (ดึงจาก localStorage ที่เก็บไว้ตอน Login)
-    const user = JSON.parse(localStorage.getItem("user"));
-    const perms = JSON.parse(localStorage.getItem("permissions")) || [];
-
-    if (!user) {
-        window.location.href = "/";
-        return;
-    }
+    // ใช้ hasPermission จาก layout.js (รองรับทั้ง string และ object)
+    if (typeof loadUser === "function") await loadUser();
+    if (typeof renderSidebar === "function") renderSidebar();
 
     // ฟังก์ชันเช็กสิทธิ์ภายในหน้า
-    const canCreate = perms.some(p => p.perm_name === "create_materials");
+    const canCreate = typeof hasPermission === "function" ? hasPermission("create_materials") : false;
     if (!canCreate) {
         await swalError("คุณไม่มีสิทธิ์เพิ่มข้อมูลวัตถุดิบ");
         window.location.href = "/materials/materials.html";
         return;
-    }
-
-    // วาด Sidebar
-    if (typeof renderSidebar === "function") {
-        renderSidebar();
     }
 
     /* ================= ELEMENTS ================= */

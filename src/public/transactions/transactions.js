@@ -58,7 +58,7 @@ async function loadTransactions() {
   } catch (err) {
     console.error("Load transactions error:", err);
     const tbody = document.getElementById("historyTable");
-    if (tbody) tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Failed to load data</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Failed to load data</td></tr>`;
   }
 }
 
@@ -70,9 +70,7 @@ function renderTable(transactions) {
   tbody.innerHTML = "";
   const fragment = document.createDocumentFragment();
 
-  // เช็กสิทธิ์การจัดการ (ลบ/แก้ไข)
   const canEdit = typeof hasPermission === "function" && hasPermission("create_transactions");
-  const canDelete = typeof hasPermission === "function" && hasPermission("manage_permissions"); // หรือสิทธิ์ delete_transaction
 
   transactions.forEach((t) => {
     const tr = document.createElement("tr");
@@ -81,19 +79,14 @@ function renderTable(transactions) {
 
     tr.innerHTML = `
       <td><strong>${t.tra_no || '-'}</strong></td>
-      <td class="text-center">
-        <span class="badge ${typeObj.class}">${typeObj.text}</span>
-      </td>
-      <td class="text-capitalize">${t.tra_item_type || "-"}</td>
       <td>${t.item_name || "-"}</td>
-      <td class="text-right font-weight-bold">${Number(t.tra_qty || 0).toLocaleString()}</td>
-      <td class="text-muted small">${t.tra_note || "-"}</td>
-      <td>${t.tra_created_at ? new Date(t.tra_created_at).toLocaleString('th-TH') : "-"}</td>
+      <td class="text-capitalize">${t.tra_item_type || "-"}</td>
+      <td class="text-center"><span class="badge ${typeObj.class}">${typeObj.text}</span></td>
+      <td class="text-right">${Number(t.tra_qty || 0).toLocaleString()}</td>
+      <td>${t.tra_created_at ? new Date(t.tra_created_at).toLocaleDateString('th-TH') : "-"}</td>
+      <td>${t.tra_note || "-"}</td>
       <td class="text-center">
-        ${canEdit ? `<button class="btn-icon edit-btn" data-id="${t.tra_id}" title="แก้ไข">✏️</button>` : "-"}
-      </td>
-      <td class="text-center">
-        ${canDelete ? `<button class="btn-icon delete-btn" data-id="${t.tra_id}" title="ลบ">🗑️</button>` : "-"}
+        ${canEdit ? `<button class="edit-btn" onclick="location.href='/transactions/transactions-add.html?ref=${t.tra_id}'" title="View"><i class="fa fa-eye"></i></button>` : "-"}
       </td>
     `;
     fragment.appendChild(tr);
@@ -101,24 +94,11 @@ function renderTable(transactions) {
 
   if (transactions.length === 0) {
     const emptyRow = document.createElement("tr");
-    emptyRow.innerHTML = `<td colspan="9" class="text-center">ไม่พบรายการความเคลื่อนไหว</td>`;
+    emptyRow.innerHTML = `<td colspan="8" class="text-center">ไม่พบรายการความเคลื่อนไหว</td>`;
     tbody.appendChild(emptyRow);
   } else {
     tbody.appendChild(fragment);
   }
-
-  bindActionButtons();
-}
-
-/* ====================== BIND BUTTONS ====================== */
-function bindActionButtons() {
-  document.querySelectorAll(".edit-btn").forEach(btn => {
-    btn.onclick = () => window.location.href = `/transactions/transactions-edit.html?id=${btn.dataset.id}`;
-  });
-
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.onclick = () => deleteTransaction(btn.dataset.id, btn);
-  });
 }
 
 /* ====================== FILTER LOGIC ====================== */

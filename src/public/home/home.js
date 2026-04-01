@@ -10,6 +10,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    // GUARD PAGE: เช็กสิทธิ์การดู Dashboard
+    if (typeof hasPermission === "function") {
+        if (!hasPermission("view_dashboard")) {
+            await swalError("คุณไม่มีสิทธิ์เข้าถึงหน้า Dashboard");
+            window.location.href = "/";
+            return;
+        }
+    }
+
     // ---  ส่วนแสดงชื่อและรูปภาพโปรไฟล์ (ดึงจาก currentUser โดยตรง) ---
     const profileName = document.getElementById("navUsername");
     const profileImg = document.getElementById("navProfileImg");
@@ -27,10 +36,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (profileImg) {
             // ใช้ Path ที่ถูกต้องตามโครงสร้างไฟล์ของคุณ (/img/emp/)
             const imgSrc = currentUser.emp_img || localStorage.getItem("emp_img");
-            profileImg.src = imgSrc ? `/img/emp/${imgSrc}` : "/img/Haro.webp";
+            profileImg.src = imgSrc ? `/img/emp/${imgSrc}` : "/img/default-users.png";
 
             profileImg.onerror = function () {
-                this.src = "/img/Haro.webp";
+                this.src = "/img/default-users.png";
             };
         }
     }

@@ -54,7 +54,7 @@ async function loadMaterials() {
     renderTable(allMaterials);
   } catch (err) {
     console.error("Load materials error:", err);
-    if (tbody) tbody.innerHTML = '<tr><td colspan="11" class="text-center text-danger">❌ Error loading data</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="text-center">❌ Error loading data</td></tr>';
   }
 }
 
@@ -69,38 +69,30 @@ function renderTable(materials) {
 
   materials.forEach((m, index) => {
     const status = STATUS_MAP[m.mat_status] || { text: "Unknown", class: "badge-light" };
-    
-    // ตรวจสอบ Path รูปภาพ
-    const imgTag = (m.mat_img && m.mat_img !== "null") 
-      ? `<img src="/img/materials/${m.mat_img}" width="45" height="45" style="object-fit:cover; border-radius:4px;" onerror="this.src='/img/Haro.webp'">`
-      : `<div style="width:45px; height:45px; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:10px; color:#aaa;">No Img</div>`;
+
+    const imgTag = (m.mat_img && m.mat_img !== "null")
+      ? `<img src="/img/materials/${m.mat_img}" class="mat-thumb" onerror="this.src='/img/default-users.png'">`
+      : `<div class="mat-thumb-placeholder"><i class="fa fa-image"></i></div>`;
 
     html += `
       <tr>
-        <td class="text-center font-weight-bold">${index + 1}</td>
-        <td><code>${m.mat_no || "-"}</code></td>
+        <td class="text-center">${index + 1}</td>
         <td class="text-center">${imgTag}</td>
-        <td><strong>${m.mat_name || "-"}</strong></td>
-        <td class="text-center">${(m.mat_qty || 0).toLocaleString()}</td>
-        <td class="text-right">${Number(m.mat_price || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+        <td><strong>${m.mat_name || "-"}</strong><br><span class="mat-code">${m.mat_no || ""}</span></td>
         <td>${m.mat_size || "-"}</td>
-        <td>${m.mat_weight ?? "-"} kg</td>
+        <td>${m.mat_weight != null ? m.mat_weight + " kg" : "-"}</td>
+        <td class="text-right">${Number(m.mat_price || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+        <td class="text-right">${(m.mat_qty || 0).toLocaleString()}</td>
+        <td><span class="badge ${status.class}">${status.text}</span></td>
         <td class="text-center">
-          <span class="badge ${status.class} p-2" style="min-width: 90px;">
-            ${status.text}
-          </span>
-        </td>
-        <td class="text-center">
-          ${canEdit ? `<button class="btn btn-sm btn-outline-primary" onclick="goEdit(${m.mat_id})">✏️</button>` : "-"}
-        </td>
-        <td class="text-center">
-          ${canDelete ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteMaterial(${m.mat_id})">🗑️</button>` : "-"}
+          ${canEdit ? `<button class="edit-btn" onclick="goEdit(${m.mat_id})" title="Edit"><i class="fa fa-pen"></i></button>` : ""}
+          ${canDelete ? `<button class="delete-btn" onclick="deleteMaterial(${m.mat_id})" title="Delete" style="margin-left:6px"><i class="fa fa-trash"></i></button>` : ""}
         </td>
       </tr>
     `;
   });
 
-  tbody.innerHTML = html || '<tr><td colspan="11" class="text-center p-4">ไม่พบข้อมูลที่ค้นหา</td></tr>';
+  tbody.innerHTML = html || '<tr><td colspan="9" class="text-center">ไม่พบข้อมูลที่ค้นหา</td></tr>';
 }
 
 // ===== SEARCH & FILTER LOGIC =====

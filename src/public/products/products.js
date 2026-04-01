@@ -2,11 +2,11 @@
 // STATUS MAP
 // ==========================
 const STATUS_MAP = {
-  1: { text: "In Stock", class: "status-in-stock" },
-  2: { text: "Low Stock", class: "status-low" },
-  3: { text: "Out of Stock", class: "status-out" },
-  4: { text: "Reserved", class: "status-reserved" },
-  5: { text: "Inactive", class: "status-inactive" }
+  1: { text: "In Stock",     class: "badge-success" },
+  2: { text: "Low Stock",    class: "badge-warning" },
+  3: { text: "Out of Stock", class: "badge-danger"  },
+  4: { text: "Reserved",     class: "badge-info"    },
+  5: { text: "Inactive",     class: "badge-secondary"}
 };
 
 let allProducts = [];
@@ -82,35 +82,30 @@ function renderTable(products) {
   const canDelete = hasPermission("delete_products");
 
   products.forEach((p, index) => {
-    const status = STATUS_MAP[p.pro_status] || { text: "Unknown", class: "status-unknown" };
+    const status = STATUS_MAP[p.pro_status] || { text: "Unknown", class: "badge-secondary" };
+
+    const imgTag = p.pro_img
+      ? `<img src="/img/products/${p.pro_img}" class="prod-thumb" onerror="this.src='/img/default-users.png'">`
+      : `<div class="prod-thumb-placeholder"><i class="fa fa-image"></i></div>`;
 
     html += `
       <tr>
-        <td>${index + 1}</td>
-        <td>${p.pro_no || "-"}</td>
-        <td>
-          ${p.pro_img ? `<img src="${p.pro_img}" width="40" style="border-radius:4px;">` : "-"}
-        </td>
-        <td>${p.pro_name || "-"}</td>
-        <td>${p.pro_qty || 0}</td>
-        <td>${Number(p.pro_price).toLocaleString()}</td>
-        <td>${p.pro_weight ?? "-"}</td>
-        <td>
-          <span class="badge ${status.class}">
-            ${status.text}
-          </span>
-        </td>
-        <td>
-          ${canEdit ? `<button class="edit-btn" onclick="goEdit(${p.pro_id})">✏️</button>` : "-"}
-        </td>
-        <td>
-          ${canDelete ? `<button class="delete-btn" onclick="deleteProduct(${p.pro_id})">🗑️</button>` : "-"}
+        <td class="text-center">${index + 1}</td>
+        <td class="text-center">${imgTag}</td>
+        <td><strong>${p.pro_name || "-"}</strong><br><span class="prod-code">${p.pro_no || ""}</span></td>
+        <td class="text-right">${Number(p.pro_price || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+        <td class="text-right">${(p.pro_qty || 0).toLocaleString()}</td>
+        <td>${p.pro_weight != null ? p.pro_weight + " kg" : "-"}</td>
+        <td><span class="badge ${status.class}">${status.text}</span></td>
+        <td class="text-center">
+          ${canEdit ? `<button class="edit-btn" onclick="goEdit(${p.pro_id})" title="Edit"><i class="fa fa-pen"></i></button>` : ""}
+          ${canDelete ? `<button class="delete-btn" onclick="deleteProduct(${p.pro_id})" title="Delete" style="margin-left:6px"><i class="fa fa-trash"></i></button>` : ""}
         </td>
       </tr>
     `;
   });
 
-  tbody.innerHTML = html || '<tr><td colspan="10">ไม่พบข้อมูลสินค้า</td></tr>';
+  tbody.innerHTML = html || '<tr><td colspan="8" class="text-center">ไม่พบข้อมูลสินค้า</td></tr>';
 }
 
 // ==========================

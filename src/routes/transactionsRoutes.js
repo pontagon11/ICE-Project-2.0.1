@@ -77,4 +77,30 @@ router.get("/item/:type/:id", async (req, res) => {
     }
 });
 
+// [POST] / - บันทึกธุรกรรมใหม่
+router.post("/", async (req, res) => {
+    const { type, itemType, itemId, qty, note } = req.body;
+    const empId = req.session?.user?.id || null;
+
+    if (!type || !itemType || !itemId || !qty || qty <= 0) {
+        return res.status(400).json({ message: "กรุณาระบุข้อมูลให้ครบถ้วน" });
+    }
+
+    try {
+        const nextNoRes = await pool.query("SELECT COALESCE(MAX(tra_no), 0) AS max_no FROM transactions");
+        const tra_no = Number(nextNoRes.rows[0].max_no) + 1;
+
+        await pool.query(
+            `INSERT INTO transactions (tra_no, tra_item_id, tra_item_type, tra_type, tra_qty, emp_id, tra_note, tra_created_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+            [tra_no, itemId, itemType, type, qty, empId, note || null]
+        );
+
+        res.json({ message: "บันทึกรายการสำเร็จ" });
+    } catch (err) {
+        console.error("Insert transaction error:", err.message);
+        res.status(500).json({ message: "ไม่สามารถบันทึกรายการได้: " + err.message });
+    }
+});
+
 module.exports = router;

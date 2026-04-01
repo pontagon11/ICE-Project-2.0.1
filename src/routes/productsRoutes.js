@@ -8,7 +8,7 @@ const fs = require('fs');
 // --- ตั้งค่าการอัปโหลดรูปสินค้า ---
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = 'public/img/products/';
+        const dir = path.join(__dirname, '..', 'public', 'img', 'products');
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         cb(null, dir);
     },

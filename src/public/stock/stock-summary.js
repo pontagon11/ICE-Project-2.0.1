@@ -11,6 +11,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderSidebar();
   }
 
+  // GUARD PAGE: เช็กสิทธิ์การดู Stock Summary
+  if (typeof hasPermission === "function") {
+    if (!hasPermission("view_stock_summary")) {
+      await swalError("คุณไม่มีสิทธิ์เข้าถึงหน้าสรุปสต็อก");
+      window.location.href = "/home/home.html";
+      return;
+    }
+  }
+
   // โหลดข้อมูล Stock จาก Server
   await loadStock();
 

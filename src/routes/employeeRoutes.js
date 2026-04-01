@@ -10,7 +10,7 @@ const { isAuthenticated } = require('../middleware/auth');
 // --- ตั้งค่าการเก็บรูปภาพ ---
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, '..', 'uploads', 'employees');
+        const dir = path.join(__dirname, '..', 'public', 'img', 'emp');
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
@@ -59,19 +59,27 @@ router.get("/:id", isAuthenticated, async (req, res) => {
 });
 
 // 3. [POST] เพิ่มพนักงานใหม่
-router.post("/", isAuthenticated, upload.single('emp_img'), async (req, res) => {
+router.post("/", isAuthenticated, (req, res, next) => {
+    upload.single('emp_img')(req, res, (err) => {
+        if (err) {
+            console.error("Multer upload error:", err.message);
+            return res.status(400).json({ message: "อัปโหลดรูปภาพไม่สำเร็จ: " + err.message });
+        }
+        next();
+    });
+}, async (req, res) => {
     const { emp_fname, emp_lname, emp_email, emp_tel, dept_id, role_id, emp_username, emp_password } = req.body;
     const emp_img = req.file ? req.file.filename : null;
 
     try {
-        // เข้ารหัสรหัสผ่าน
-        const hashedPassword = await bcrypt.hash(emp_password, 10);
+        // ไม่เข้ารหัสรหัสผ่าน — login ใช้การเปรียบเทียบตรงๆ
+        // const hashedPassword = await bcrypt.hash(emp_password, 10);
 
         const result = await pool.query(
             `INSERT INTO employees 
             (emp_fname, emp_lname, emp_email, emp_tel, dept_id, role_id, emp_username, emp_password, emp_img, status) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'active') RETURNING emp_id`,
-            [emp_fname, emp_lname, emp_email, emp_tel, dept_id, role_id, emp_username, hashedPassword, emp_img]
+            [emp_fname, emp_lname, emp_email, emp_tel, dept_id, role_id, emp_username, emp_password, emp_img]
         );
 
         res.json({ message: "Employee added successfully", emp_id: result.rows[0].emp_id });
@@ -82,7 +90,15 @@ router.post("/", isAuthenticated, upload.single('emp_img'), async (req, res) => 
 });
 
 // 4. [PUT] อัปเดตข้อมูลพนักงาน
-router.put("/:id", isAuthenticated, upload.single('emp_img'), async (req, res) => {
+router.put("/:id", isAuthenticated, (req, res, next) => {
+    upload.single('emp_img')(req, res, (err) => {
+        if (err) {
+            console.error("Multer upload error:", err.message);
+            return res.status(400).json({ message: "อัปโหลดรูปภาพไม่สำเร็จ: " + err.message });
+        }
+        next();
+    });
+}, async (req, res) => {
     const { id } = req.params;
     const { emp_fname, emp_lname, emp_email, emp_tel, dept_id, role_id, emp_username, emp_password, status } = req.body;
     
@@ -96,10 +112,10 @@ router.put("/:id", isAuthenticated, upload.single('emp_img'), async (req, res) =
             query += `, emp_img=$${params.length}`;
         }
 
-        // ถ้ามีการเปลี่ยนรหัสผ่าน
+        // ถ้ามีการเปลี่ยนรหัสผ่าน (ไม่เข้ารหัส — login ใช้การเปรียบเทียบตรงๆ)
         if (emp_password) {
-            const hashed = await bcrypt.hash(emp_password, 10);
-            params.push(hashed);
+            // const hashed = await bcrypt.hash(emp_password, 10);
+            params.push(emp_password);
             query += `, emp_password=$${params.length}`;
         }
 
@@ -109,7 +125,8 @@ router.put("/:id", isAuthenticated, upload.single('emp_img'), async (req, res) =
         await pool.query(query, params);
         res.json({ message: "Updated successfully" });
     } catch (err) {
-        res.status(500).json({ message: "Update failed" });
+        console.error("Employee update error:", err.message);
+        res.status(500).json({ message: "Update failed: " + err.message });
     }
 });
 

@@ -93,6 +93,7 @@ function renderTable(dataToRender) {
                 <td>${p.po_date ? new Date(p.po_date).toLocaleDateString("th-TH") : "-"}</td>
                 <td><span class="status-badge status-${statusClean}">${statusClean.toUpperCase()}</span></td>
                 <td class="text-center">
+                    <button class="btn-icon" title="View Details" onclick="window.location.href='/purchase/purchase-edit.html?id=${p.po_id}'"><i class="fa fa-eye"></i></button>
                     ${canReceive ? `<button class="btn-receive" onclick="receivePO(${p.po_id}, this)">Receive</button>` : ""}
                 </td>
             </tr>

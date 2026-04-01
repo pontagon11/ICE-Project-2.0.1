@@ -2,40 +2,19 @@
 
 /* ====================== INITIALIZATION ====================== */
 document.addEventListener("DOMContentLoaded", async () => {
-    
-    // 1. รอให้ checkLogin ทำงานจนจบและดึง User ข้อมูลมาให้ (สำคัญมาก!)
-    let user = null;
-    if (typeof checkLogin === "function") {
-        user = await checkLogin(); // รอจนกว่าข้อมูลจะถูกเซฟลง LocalStorage
-    }
 
-    // 2. วาด Sidebar
-    if (typeof renderSidebar === "function") {
-        renderSidebar();
-    }
+    // 1. Load user & draw sidebar
+    if (typeof loadUser === "function") await loadUser();
+    if (typeof renderSidebar === "function") renderSidebar();
 
-    // 3. GUARD PAGE: เช็คสิทธิ์
-    // ตรวจสอบว่าข้อมูลใน LocalStorage มาหรือยัง
-    const permissions = JSON.parse(localStorage.getItem("permissions") || "[]");
-    console.log("✅ Permissions in LocalStorage:", permissions);
-    console.log("🔍 Looking for: 'approve_po'");
-
-    if (!permissions.includes("approve_po")) { 
-        const errorMsg = `❌ ข้อผิดพลาดด้านสิทธิ์:\nคุณไม่มีสิทธิ์ 'approve_po'
-\nสิทธิ์ที่มี: ${permissions.length > 0 ? permissions.join(', ') : '(ไม่มีสิทธิ์ใดๆ)'}
-\nโปรดติดต่อผู้ดูแลระบบ`;
-        
-        console.error("❌ Permission Error:", errorMsg);
-        await swalError("คุณไม่มีสิทธิ์ 'approve_po' โปรดติดต่อผู้ดูแลระบบ");
+    // 2. Guard: use shared hasPermission (supports admin bypass)
+    if (!hasPermission("approve_po")) {
+        await swalError("คุณไม่มีสิทธิ์เข้าถึงหน้าอนุมัติการสั่งซื้อ");
         window.location.href = "/home/home.html";
         return;
     }
 
-    // 4. ถ้าผ่านสิทธิ์ ให้โหลดรายการ
-    console.log("✅ สิทธิ์ตรวจสอบโอเค โหลดข้อมูลการอนุมัติ...");
     loadApproveList();
-
-    // 5. ผูก Event Filter
     document.getElementById("statusFilter")?.addEventListener("change", loadApproveList);
 });
 

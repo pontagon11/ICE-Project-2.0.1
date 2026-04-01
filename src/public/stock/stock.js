@@ -68,14 +68,17 @@ function renderStockTable(data) {
     let html = "";
     data.forEach((item, index) => {
         const typeClass = item.type === "product" ? "badge-product" : "badge-material";
-        
+        const qty = Number(item.stock || 0);
+        const stockClass = qty <= 0 ? "stock-low" : "stock-ok";
+        const stockLabel = qty <= 0 ? "Low / Empty" : "OK";
+
         html += `
             <tr>
                 <td>${index + 1}</td>
                 <td><strong>${item.name || "-"}</strong></td>
                 <td><span class="badge ${typeClass}">${item.type}</span></td>
-                <td class="text-right">${Number(item.stock).toLocaleString()}</td>
-                <td>-</td>
+                <td class="text-right">${qty.toLocaleString()}</td>
+                <td><span class="${stockClass}">${stockLabel}</span></td>
                 <td class="text-center">
                     <input type="checkbox" ${item.qc_status ? "checked" : ""} disabled>
                 </td>

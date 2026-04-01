@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // GUARD PAGE: เช็กสิทธิ์การจัดการพนักงาน
     if (typeof hasPermission === "function") {
-        if (!hasPermission("manage_permissions")) {
+        if (!hasPermission("create_employee")) {
             await swalError("คุณไม่มีสิทธิ์เพิ่มข้อมูลพนักงาน");
             window.location.href = "/employees/employee.html";
             return;

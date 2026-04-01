@@ -81,47 +81,25 @@ function renderTable(data) {
   const canEdit = typeof hasPermission === "function" && hasPermission("edit_bom");
   const canDelete = typeof hasPermission === "function" && hasPermission("edit_bom");
 
-  boms.forEach(bom => {
-    // --- (Header) ---
+  boms.forEach((bom, index) => {
+    // --- Header row (one per BOM) ---
     const headerRow = `
-            <tr class="bom-header-row" style="background-color: #f8f9fa; font-weight: bold;">
-                <td>${bom.bom_no}</td>
-                <td>${bom.pro_no}</td>
-                <td>${bom.pro_name}</td>
-                <td class="text-center">
-                    ${canEdit ? `<button class="btn-icon edit-btn" onclick="editBom(${bom.bom_id})">✏️</button>` : "-"}
-                </td>
-                <td class="text-center">
-                    ${canDelete ? `<button class="btn-icon delete-btn" onclick="deleteBOM(${bom.bom_id})">🗑️</button>` : "-"}
-                </td>
-            </tr>
-        `;
-    // --- (Detail) ---
-    const detailRow = `
-   <tr class="bom-detail-row">
-      <td colspan="5" style="padding: 10px 30px;">
-          <table class="table table-sm table-bordered" style="background: white; margin-bottom: 20px;">
-              <thead class="thead-light">
-                  <tr>
-                      <th>Material No</th>
-                      <th>Material Name</th>
-                      <th class="text-right">Usage Qty</th>
-                    </tr>
-               </thead>
-                <tbody>
-                    ${bom.materials.map(m => `
-                    <tr>
-                    <td>${m.mat_no || '-'}</td>
-                    <td>${m.mat_name || '-'}</td>
-                    <td class="text-right">${Number(m.usage_qty).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                    `).join("")}
-                </tbody>
-           </table>
-      </td>
-    </tr>
-        `;
-    tbody.innerHTML += headerRow + detailRow;
+      <tr class="bom-header-row">
+        <td>${index + 1}</td>
+        <td>${bom.bom_no || "-"}</td>
+        <td>${bom.pro_name || "-"}</td>
+        <td>
+          ${bom.materials.length > 0
+            ? bom.materials.map(m => `${m.mat_name || ""} (${Number(m.usage_qty || 0).toFixed(2)})`).join(", ")
+            : "<em>No materials</em>"}
+        </td>
+        <td class="text-center">
+          ${canEdit ? `<button class="edit-btn" onclick="editBom(${bom.bom_id})" title="Edit"><i class="fa fa-pen"></i></button>` : ""}
+          ${canDelete ? `<button class="delete-btn" onclick="deleteBOM(${bom.bom_id})" title="Delete" style="margin-left:6px"><i class="fa fa-trash"></i></button>` : ""}
+        </td>
+      </tr>
+    `;
+    tbody.innerHTML += headerRow;
   });
 }
 

@@ -40,7 +40,7 @@ router.get("/badges", async (req, res) => {
         const stats = await pool.query(`
             SELECT 
                 -- นับจำนวน PO ที่สถานะเป็น pending
-                (SELECT COUNT(*) FROM purchase WHERE status = 'pending') AS pending_po,
+                (SELECT COUNT(*) FROM purchase WHERE UPPER(status) = 'PENDING') AS pending_po,
                 
                 -- นับจำนวนสินค้า/วัตถุดิบที่ยอดคงเหลือ (จาก View) ต่ำกว่าเกณฑ์
                 (

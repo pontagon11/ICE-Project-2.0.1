@@ -3,6 +3,17 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 
+// [GET] / - ดึงรายชื่อ Role ทั้งหมด (สำหรับ Dropdown ในหน้า Add/Edit Employee)
+router.get('/', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT role_id, role_name FROM roles ORDER BY role_id');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Get roles error:', err.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 router.get('/:id/permissions', async (req, res) => {
     const roleId = req.params.id;
     try {

@@ -1,6 +1,6 @@
-require('dotenv').config();
-const express = require('express');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+const express = require('express');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const pool = require('./config/db');
@@ -92,6 +92,17 @@ app.use('/sidebar', checkAuth, require('./routes/sidebarRoutes'));
 app.use('/stock-summary', checkAuth, require('./routes/stock_summaryRoutes'));
 app.use('/stock', checkAuth, require('./routes/stockRoutes'));
 app.use('/transactions', checkAuth, require('./routes/transactionsRoutes'));
+
+// ================= 5b. Simple lookup routes =================
+app.get('/departments', checkAuth, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT dept_id, dept_name FROM departments ORDER BY dept_name');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Departments error:', err.message);
+        res.status(500).json({ message: 'Error fetching departments' });
+    }
+});
 
 // ================= 6. Page Routes (ส่งไฟล์ HTML) =================
 app.get('/', (req, res) => {

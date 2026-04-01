@@ -169,16 +169,16 @@ function updateUserProfileDOM() {
   if (!user) return;
   const fullName = `${user.emp_fname || ''} ${user.emp_lname || ''}`.trim();
   const fileName = user.emp_img ? user.emp_img.split('/').pop() : null;
-  const userImg  = `${fileName ? `/img/emp/${fileName}` : "/img/Haro.webp"}?t=${Date.now()}`;
+  const userImg  = `${fileName ? `/img/emp/${fileName}` : "/img/default-users.png"}?t=${Date.now()}`;
 
   const sbImg  = document.getElementById("sidebarProfileImg");
   const sbName = document.getElementById("sidebarUsername");
   if (sbName) sbName.innerText = fullName;
-  if (sbImg)  { sbImg.src = userImg; sbImg.onerror = () => { sbImg.src = "/img/Haro.webp"; }; }
+  if (sbImg)  { sbImg.src = userImg; sbImg.onerror = () => { sbImg.src = "/img/default-users.png"; }; }
 
   // Also update navbar profile if already injected
   const navImg  = document.getElementById("navProfileImg");
   const navName = document.getElementById("navUsername");
   if (navName) navName.innerText = fullName;
-  if (navImg)  { navImg.src = userImg; navImg.onerror = () => { navImg.src = "/img/Haro.webp"; }; }
+  if (navImg)  { navImg.src = userImg; navImg.onerror = () => { navImg.src = "/img/default-users.png"; }; }
 }

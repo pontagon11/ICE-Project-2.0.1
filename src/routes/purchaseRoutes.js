@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     }
 
     try {
-        const result = await pool.query(`
+        let query = `
             SELECT 
                 p.po_id, p.po_no, p.status, p.tra_note,
                 pi.qty,
@@ -21,8 +21,18 @@ router.get("/", async (req, res) => {
             JOIN purchase_detail pi ON p.po_id = pi.po_id
             JOIN materials m ON pi.mat_id = m.mat_id
             LEFT JOIN employees e ON p.emp_id = e.emp_id
-            ORDER BY p.po_id DESC, m.mat_name ASC
-        `);
+        `;
+        const values = [];
+
+        // รองรับ query parameter ?status= สำหรับกรองสถานะ (เช่น approved, PENDING)
+        if (req.query.status) {
+            query += ` WHERE UPPER(p.status) = UPPER($1)`;
+            values.push(req.query.status);
+        }
+
+        query += ` ORDER BY p.po_id DESC, m.mat_name ASC`;
+
+        const result = await pool.query(query, values);
 
         // ตรวจสอบว่ามีข้อมูลไหม ถ้าไม่มีให้ส่ง Array ว่าง (ป้องกัน forEach พัง)
         res.json(result.rows || []);
@@ -42,6 +52,34 @@ router.get("/next-po", async (req, res) => {
         res.json({ po_no });
     } catch (err) {
         res.json({ po_no: "AUTO" });
+    }
+});
+
+// --- [GET] ดึงรายละเอียด PO เดี่ยว (ต้องอยู่หลัง /next-po เสมอ) ---
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(`
+            SELECT
+                p.po_id, p.po_no, p.status, p.tra_note, p.po_date,
+                pi.qty,
+                m.mat_id, m.mat_name, m.mat_no,
+                e.emp_fname || ' ' || COALESCE(e.emp_lname, '') AS emp_name
+            FROM purchase p
+            JOIN purchase_detail pi ON p.po_id = pi.po_id
+            JOIN materials m ON pi.mat_id = m.mat_id
+            LEFT JOIN employees e ON p.emp_id = e.emp_id
+            WHERE p.po_id = $1
+            ORDER BY m.mat_name ASC
+        `, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "ไม่พบใบสั่งซื้อ" });
+        }
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Get PO detail error:", err.message);
+        res.status(500).json({ message: "Server Error: " + err.message });
     }
 });
 

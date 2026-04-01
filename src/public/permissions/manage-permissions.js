@@ -95,44 +95,38 @@ function renderPermissions(selectedPermNames = []) {
     container.innerHTML = "";
 
     for (let groupName in GROUPS) {
-        // สร้าง Card สำหรับแต่ละกลุ่ม
         const groupBox = document.createElement("div");
-        groupBox.className = "permission-card mb-4 p-3 border rounded shadow-sm bg-white";
+        groupBox.className = "group";
 
-        // ส่วนหัวกลุ่ม (พร้อม Master Checkbox)
         const header = document.createElement("div");
-        header.className = "group-header border-bottom pb-2 mb-3";
         header.innerHTML = `
-            <label class="d-flex align-items-center mb-0" style="cursor:pointer;">
-                <input type="checkbox" class="mr-2" style="transform: scale(1.2);" 
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0">
+                <input type="checkbox" style="width:15px;height:15px;accent-color:#3b82f6"
                        onchange="toggleGroup('${groupName}', this)">
-                <h5 class="m-0 text-primary">${groupName}</h5>
+                <h3 style="margin:0 0 12px 0">${groupName}</h3>
             </label>
         `;
         groupBox.appendChild(header);
 
-        // ส่วนรายการ Checkbox ย่อยในกลุ่ม
-        const itemsRow = document.createElement("div");
-        itemsRow.className = "row";
+        const itemsWrap = document.createElement("div");
+        itemsWrap.style.cssText = "display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0";
 
         GROUPS[groupName].forEach(pName => {
             const perm = allPermissions.find(p => p.perm_name === pName);
             if (!perm) return;
 
             const isChecked = selectedPermNames.includes(perm.perm_name);
-            const col = document.createElement("div");
-            col.className = "col-md-4 col-sm-6 mb-2"; // แบ่ง 3 คอลัมน์บนจอใหญ่
-            col.innerHTML = `
-                <label class="d-flex align-items-center p-1" style="font-weight:normal; cursor:pointer; font-size: 0.95rem;">
-                    <input type="checkbox" name="perm_id" value="${perm.perm_id}" 
-                           data-group="${groupName}" ${isChecked ? "checked" : ""}>
-                    <span class="ml-2">${formatName(pName)}</span>
-                </label>
+            const item = document.createElement("div");
+            item.className = "perm-item";
+            item.innerHTML = `
+                <input type="checkbox" name="perm_id" value="${perm.perm_id}"
+                       data-group="${groupName}" ${isChecked ? "checked" : ""}>
+                <span>${formatName(pName)}</span>
             `;
-            itemsRow.appendChild(col);
+            itemsWrap.appendChild(item);
         });
 
-        groupBox.appendChild(itemsRow);
+        groupBox.appendChild(itemsWrap);
         container.appendChild(groupBox);
     }
 }

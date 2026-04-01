@@ -10,7 +10,7 @@ router.get("/user-profile", (req, res) => {
             loggedIn: true,
             fname: req.session.user.fname,
             lname: req.session.user.lname,
-            img: req.session.user.img || 'default-avatar.png',
+            img: req.session.user.emp_img || 'default-avatar.png',
             role_name: req.session.user.role_name
         });
     } else {

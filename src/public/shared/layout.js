@@ -1,32 +1,37 @@
 ﻿ /* ========================== PERMISSION HELPER ========================== */
 function hasPermission(name) {
-    const user = window.currentUser || JSON.parse(localStorage.getItem("user"));
-    
-    // ถ้าเป็น admin ให้ผ่านทุกด่าน
-    if (user?.emp_role === 'admin') return true;
+    const user = window.currentUser || JSON.parse(localStorage.getItem("user") || "null");
 
-    const perms = user?.permissions || [];
-    return perms.some(p => (typeof p === 'string' ? p === name : p.perm_name === name)) ||
-           perms.includes(name);
+    // Admin (role_id=1) bypasses all checks
+    if (user?.role_id === 1 || user?.role_id === '1' || user?.emp_role === 'admin') return true;
+
+    // Also check raw localStorage role for edge case where user object not yet set
+    if (localStorage.getItem("role") === '1') return true;
+
+    const perms = user?.permissions || JSON.parse(localStorage.getItem("permissions") || "[]");
+    if (Array.isArray(perms)) {
+        return perms.some(p => typeof p === 'string' ? p === name : p.perm_name === name);
+    }
+    return false;
 }
 
 /* ========================== PROFILE SETUP ========================== */
 function setupProfile(user) {
     const fullName = `${user.emp_fname || ''} ${user.emp_lname || user.emp_username || 'User'}`.trim();
     const fileName = user.emp_img ? user.emp_img.split('/').pop() : null;
-    const userImg = `${fileName ? `/img/emp/${fileName}` : "/img/Haro.webp"}?t=${Date.now()}`;
+    const userImg = `${fileName ? `/img/emp/${fileName}` : "/img/default-users.png"}?t=${Date.now()}`;
 
     // Navbar elements
     const navName = document.getElementById("navUsername");
     const navImg  = document.getElementById("navProfileImg");
     if (navName) navName.innerText = fullName;
-    if (navImg)  { navImg.src = userImg; navImg.onerror = () => { navImg.src = "/img/Haro.webp"; }; }
+    if (navImg)  { navImg.src = userImg; navImg.onerror = () => { navImg.src = "/img/default-users.png"; }; }
 
     // Sidebar elements (injected later — updateUserProfileDOM() also covers these)
     const sbName = document.getElementById("sidebarUsername");
     const sbImg  = document.getElementById("sidebarProfileImg");
     if (sbName) sbName.innerText = fullName;
-    if (sbImg)  { sbImg.src = userImg; sbImg.onerror = () => { sbImg.src = "/img/Haro.webp"; }; }
+    if (sbImg)  { sbImg.src = userImg; sbImg.onerror = () => { sbImg.src = "/img/default-users.png"; }; }
 }
 
 /* ========================== NAVIGATION CONTROL ========================== */

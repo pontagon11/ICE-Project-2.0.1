@@ -21,22 +21,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const imgSrc = user.emp_img || localStorage.getItem("emp_img");
 
-        profileImg.src = imgSrc ? `/img/emp/${imgSrc}?t=${new Date().getTime()}` : "/img/Haro.webp";
+        profileImg.src = imgSrc ? `/img/emp/${imgSrc}?t=${new Date().getTime()}` : "/img/default-users.png";
 
         profileImg.onerror = function () {
-            this.src = "/img/Haro.webp";
+            this.src = "/img/default-users.png";
         };
     }
     // เก็บ User ไว้ใน window เพื่อให้ savePO ดึงไปใช้ได้
     window.currentUser = user;
 
     // 2. เช็คสิทธิ์
-    let userPermissions = user.permissions || [];
-    if (typeof userPermissions === 'string') {
-        try { userPermissions = JSON.parse(userPermissions); } catch (e) { }
-    }
-
-    if (!userPermissions.includes("create_purchase")) {
+    if (!hasPermission("create_purchase")) {
         await swalError("คุณไม่มีสิทธิ์สร้างใบสั่งซื้อ");
         window.location.href = "/purchase/purchase.html";
         return;
@@ -69,7 +64,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } else {
                     await swalError("Logout failed");
                 }
-                }
             } catch (err) {
                 console.error("Logout error:", err);
             }
@@ -82,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 ====================== */
 async function loadMaterials() {
     try {
-        const res = await fetch(API_MATERIAL); // ไม่ต้องใส่ credentials: "include" เพราะพอร์ตเดียวกัน
+        const res = await fetch(API_MATERIAL, { credentials: "include" });
         const data = await res.json();
 
         if (!Array.isArray(data)) return;

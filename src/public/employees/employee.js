@@ -73,32 +73,34 @@ function renderEmployees(data) {
     tbody.innerHTML = "";
 
     if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center">ไม่พบข้อมูลพนักงาน</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center">ไม่พบข้อมูลพนักงาน</td></tr>`;
         return;
     }
 
-    data.forEach(emp => {
+    data.forEach((emp, index) => {
         const canEdit = typeof hasPermission === "function" && hasPermission("edit_employee");
-        
-        // จัดการรูปโปรไฟล์ (ถ้าไม่มีให้ใช้รูป Default)
-        const imgPath = emp.emp_img ? `/uploads/employees/${emp.emp_img}` : "/img/Haro.webp";
-        
+
+        const imgPath = emp.emp_img ? `/img/emp/${emp.emp_img}` : "/img/default-users.png";
+        const isActive = emp.status === 'active';
+
         const row = document.createElement("tr");
         row.innerHTML = `
+            <td class="text-center">${index + 1}</td>
             <td class="text-center">
-                <img src="${imgPath}" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                <img src="${imgPath}" alt="Avatar" class="emp-avatar" onerror="this.src='/img/default-users.png'">
             </td>
-            <td><strong>${emp.emp_fname} ${emp.emp_lname}</strong><br><small class="text-muted">${emp.emp_email || '-'}</small></td>
+            <td class="emp-name-cell"><strong>${emp.emp_fname} ${emp.emp_lname}</strong><br><small>${emp.emp_email || '-'}</small></td>
+            <td>${emp.emp_tel || '-'}</td>
             <td>${emp.dept_name || '-'}</td>
-            <td><span class="badge badge-info">${emp.role_name || '-'}</span></td>
+            <td><span class="role-badge">${emp.role_name || '-'}</span></td>
             <td>
-                <span class="status-dot ${emp.status === 'active' ? 'bg-success' : 'bg-danger'}"></span>
-                ${emp.status === 'active' ? 'ทำงานอยู่' : 'พ้นสภาพ'}
+                <span class="status-dot ${isActive ? 'bg-success' : 'bg-danger'}"></span>
+                ${isActive ? 'Active' : 'Inactive'}
             </td>
             <td class="text-center">
                 ${canEdit ? `
-                    <button class="btn-icon edit-btn" onclick="editEmployee(${emp.emp_id})">✏️</button>
-                    <button class="btn-icon delete-btn" onclick="deleteEmployee(${emp.emp_id})">🗑️</button>
+                    <button class="edit-btn" onclick="editEmployee(${emp.emp_id})" title="Edit"><i class="fa fa-pen"></i></button>
+                    <button class="delete-btn" onclick="deleteEmployee(${emp.emp_id})" title="Delete" style="margin-left:6px"><i class="fa fa-trash"></i></button>
                 ` : "-"}
             </td>
         `;

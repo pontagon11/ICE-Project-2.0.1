@@ -5,9 +5,8 @@
     if (typeof loadUser === "function") await loadUser();
     if (typeof renderSidebar === "function") renderSidebar();
 
-    // เช็กสิทธิ์การแก้ไข (ดึงจาก localStorage ที่เก็บไว้ตอน Login)
-    const perms = JSON.parse(localStorage.getItem("permissions")) || [];
-    const canEdit = perms.some(p => p.perm_name === "edit_materials");
+    // เช็กสิทธิ์การแก้ไข (ใช้ hasPermission จาก layout.js)
+    const canEdit = typeof hasPermission === "function" ? hasPermission("edit_materials") : false;
 
     if (!canEdit) {
         await swalError("คุณไม่มีสิทธิ์แก้ไขข้อมูลวัตถุดิบ");
