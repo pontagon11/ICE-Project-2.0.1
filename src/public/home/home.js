@@ -36,11 +36,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (profileImg) {
             // ใช้ Path ที่ถูกต้องตามโครงสร้างไฟล์ของคุณ (/img/emp/)
             const imgSrc = currentUser.emp_img || localStorage.getItem("emp_img");
-            profileImg.src = imgSrc ? `/img/emp/${imgSrc}` : "/img/default-users.png";
-
-            profileImg.onerror = function () {
-                this.src = "/img/default-users.png";
-            };
+            if (imgSrc && imgSrc !== 'null') {
+                profileImg.src = `/img/emp/${imgSrc}`;
+                profileImg.onerror = function () {
+                    this.style.display = 'none';
+                };
+            } else {
+                profileImg.style.display = 'none';
+            }
         }
     }
 

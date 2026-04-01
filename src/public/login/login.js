@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("fname", data.emp_fname || "");
             localStorage.setItem("lname", data.emp_lname || "");
             localStorage.setItem("emp_id", data.emp_id || "");
-            localStorage.setItem("emp_img", data.emp_img || "/img/default-users.png");
+            localStorage.setItem("emp_img", data.emp_img || "");
 
             console.log("7. [FRONTEND] กำลังย้ายไปหน้า home.html");
             window.location.href = "/home/home.html";

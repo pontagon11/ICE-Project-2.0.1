@@ -1,5 +1,5 @@
 /* ============================================================
-   EMPLOYEE EDIT PAGE — same as employee-add.css
+   EMPLOYEE EDIT PAGE ï¿½ same as employee-add.css
    ============================================================ */
 .photo-section {
   display: flex;
@@ -10,6 +10,12 @@
   padding-bottom: 20px;
   border-bottom: 1px solid var(--gray-200);
 }
+.preview-photo-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
 .preview-photo {
   width: 110px;
   height: 110px;
@@ -17,6 +23,19 @@
   object-fit: cover;
   border: 3px solid var(--gray-200);
   background: var(--gray-100);
+}
+
+.preview-photo-placeholder {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  border: 3px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  font-size: 40px;
 }
 .input-pw-wrap {
   position: relative;

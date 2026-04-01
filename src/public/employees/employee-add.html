@@ -19,7 +19,10 @@
   <div class="page-content">
     <div class="form-card">
       <div class="photo-section">
-        <img id="previewImg" src="/img/default-users.png" alt="Preview" class="preview-photo" />
+        <div class="preview-photo-wrap">
+          <img id="previewImg" src="" alt="Preview" class="preview-photo" style="display:none" />
+          <div id="previewPlaceholder" class="preview-photo-placeholder"><i class="fa-solid fa-user"></i></div>
+        </div>
         <button type="button" id="chooseImageBtn" class="btn-secondary"><i class="fa fa-image"></i> Choose Photo</button>
         <input type="file" id="emp_img" accept="image/*" style="display:none" />
       </div>

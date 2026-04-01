@@ -21,7 +21,10 @@
     <!-- Right: profile + logout -->
     <div class="nav-right">
         <div class="nav-profile">
-            <img id="navProfileImg" src="/img/default-users.png" class="nav-avatar" onerror="this.src='/img/default-users.png'">
+            <div id="navProfileImgWrap" class="nav-avatar-wrap">
+              <img id="navProfileImg" src="" class="nav-avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <i class="fa-solid fa-user nav-avatar-icon" style="display:none"></i>
+            </div>
             <span id="navUsername" class="nav-username">Loading...</span>
         </div>
         <a href="#" id="logoutBtn" class="nav-logout" title="Logout">

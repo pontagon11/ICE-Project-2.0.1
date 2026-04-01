@@ -71,7 +71,7 @@ function renderTable(materials) {
     const status = STATUS_MAP[m.mat_status] || { text: "Unknown", class: "badge-light" };
 
     const imgTag = (m.mat_img && m.mat_img !== "null")
-      ? `<img src="/img/materials/${m.mat_img}" class="mat-thumb" onerror="this.src='/img/default-users.png'">`
+      ? `<img src="/img/materials/${m.mat_img}" class="mat-thumb" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=mat-thumb-placeholder><i class=fa fa-image></i></div>'">`
       : `<div class="mat-thumb-placeholder"><i class="fa fa-image"></i></div>`;
 
     html += `

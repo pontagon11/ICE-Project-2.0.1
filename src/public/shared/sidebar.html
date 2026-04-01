@@ -8,7 +8,10 @@
 
   <!-- Profile Section -->
   <div class="sidebar-profile">
-    <img id="sidebarProfileImg" src="/img/default-users.png" class="sidebar-profile-img" alt="profile" />
+    <div class="sidebar-avatar-wrap">
+      <img id="sidebarProfileImg" src="" class="sidebar-profile-img" alt="profile" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+      <i class="fa-solid fa-user sidebar-avatar-icon" style="display:none"></i>
+    </div>
     <div class="sidebar-profile-info">
       <span id="sidebarUsername" class="sidebar-username"></span>
     </div>

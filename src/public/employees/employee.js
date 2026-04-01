@@ -80,15 +80,17 @@ function renderEmployees(data) {
     data.forEach((emp, index) => {
         const canEdit = typeof hasPermission === "function" && hasPermission("edit_employee");
 
-        const imgPath = emp.emp_img ? `/img/emp/${emp.emp_img}` : "/img/default-users.png";
+        const hasImg = emp.emp_img && emp.emp_img !== 'null';
+        const imgTag = hasImg
+            ? `<img src="/img/emp/${emp.emp_img}" alt="Avatar" class="emp-avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+               <div class="emp-avatar-placeholder" style="display:none"><i class="fa-solid fa-user"></i></div>`
+            : `<div class="emp-avatar-placeholder"><i class="fa-solid fa-user"></i></div>`;
         const isActive = emp.status === 'active';
 
         const row = document.createElement("tr");
         row.innerHTML = `
             <td class="text-center">${index + 1}</td>
-            <td class="text-center">
-                <img src="${imgPath}" alt="Avatar" class="emp-avatar" onerror="this.src='/img/default-users.png'">
-            </td>
+            <td class="text-center">${imgTag}</td>
             <td class="emp-name-cell"><strong>${emp.emp_fname} ${emp.emp_lname}</strong><br><small>${emp.emp_email || '-'}</small></td>
             <td>${emp.emp_tel || '-'}</td>
             <td>${emp.dept_name || '-'}</td>

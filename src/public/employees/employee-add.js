@@ -57,6 +57,8 @@ function setupImageUpload() {
         reader.onload = (e) => {
             previewImg.src = e.target.result;
             previewImg.style.display = "block";
+            const placeholder = document.getElementById("previewPlaceholder");
+            if (placeholder) placeholder.style.display = "none";
         };
         reader.readAsDataURL(file);
     });

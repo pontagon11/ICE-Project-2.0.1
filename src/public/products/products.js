@@ -85,7 +85,7 @@ function renderTable(products) {
     const status = STATUS_MAP[p.pro_status] || { text: "Unknown", class: "badge-secondary" };
 
     const imgTag = p.pro_img
-      ? `<img src="/img/products/${p.pro_img}" class="prod-thumb" onerror="this.src='/img/default-users.png'">`
+      ? `<img src="${p.pro_img}" class="prod-thumb" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=prod-thumb-placeholder><i class=fa fa-image></i></div>'">`
       : `<div class="prod-thumb-placeholder"><i class="fa fa-image"></i></div>`;
 
     html += `

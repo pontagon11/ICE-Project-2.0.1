@@ -21,11 +21,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const imgSrc = user.emp_img || localStorage.getItem("emp_img");
 
-        profileImg.src = imgSrc ? `/img/emp/${imgSrc}?t=${new Date().getTime()}` : "/img/default-users.png";
-
-        profileImg.onerror = function () {
-            this.src = "/img/default-users.png";
-        };
+        if (imgSrc && imgSrc !== 'null') {
+            profileImg.src = `/img/emp/${imgSrc}?t=${new Date().getTime()}`;
+            profileImg.onerror = function () {
+                this.style.display = 'none';
+            };
+        } else {
+            profileImg.style.display = 'none';
+        }
     }
     // เก็บ User ไว้ใน window เพื่อให้ savePO ดึงไปใช้ได้
     window.currentUser = user;

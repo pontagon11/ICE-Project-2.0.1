@@ -19,19 +19,37 @@ function hasPermission(name) {
 function setupProfile(user) {
     const fullName = `${user.emp_fname || ''} ${user.emp_lname || user.emp_username || 'User'}`.trim();
     const fileName = user.emp_img ? user.emp_img.split('/').pop() : null;
-    const userImg = `${fileName ? `/img/emp/${fileName}` : "/img/default-users.png"}?t=${Date.now()}`;
+    const userImg = fileName ? `/img/emp/${fileName}?t=${Date.now()}` : null;
 
     // Navbar elements
     const navName = document.getElementById("navUsername");
     const navImg  = document.getElementById("navProfileImg");
+    const navIcon = navImg?.nextElementSibling;
     if (navName) navName.innerText = fullName;
-    if (navImg)  { navImg.src = userImg; navImg.onerror = () => { navImg.src = "/img/default-users.png"; }; }
+    if (navImg && userImg) {
+        navImg.src = userImg;
+        navImg.style.display = '';
+        if (navIcon) navIcon.style.display = 'none';
+        navImg.onerror = () => { navImg.style.display = 'none'; if (navIcon) navIcon.style.display = 'flex'; };
+    } else if (navImg) {
+        navImg.style.display = 'none';
+        if (navIcon) navIcon.style.display = 'flex';
+    }
 
     // Sidebar elements (injected later — updateUserProfileDOM() also covers these)
     const sbName = document.getElementById("sidebarUsername");
     const sbImg  = document.getElementById("sidebarProfileImg");
+    const sbIcon = sbImg?.nextElementSibling;
     if (sbName) sbName.innerText = fullName;
-    if (sbImg)  { sbImg.src = userImg; sbImg.onerror = () => { sbImg.src = "/img/default-users.png"; }; }
+    if (sbImg && userImg) {
+        sbImg.src = userImg;
+        sbImg.style.display = '';
+        if (sbIcon) sbIcon.style.display = 'none';
+        sbImg.onerror = () => { sbImg.style.display = 'none'; if (sbIcon) sbIcon.style.display = 'flex'; };
+    } else if (sbImg) {
+        sbImg.style.display = 'none';
+        if (sbIcon) sbIcon.style.display = 'flex';
+    }
 }
 
 /* ========================== NAVIGATION CONTROL ========================== */

@@ -68,9 +68,10 @@ async function loadEmployee(id) {
 
         if (data.emp_img) {
             const previewImg = document.getElementById("previewImg");
-            // ปรับ Path รูปภาพให้ตรงกับที่เก็บใน Server
+            const placeholder = document.getElementById("previewPlaceholder");
             previewImg.src = `/img/emp/${data.emp_img}`; 
             previewImg.style.display = "block";
+            if (placeholder) placeholder.style.display = "none";
         }
 
     } catch (err) {
@@ -165,6 +166,8 @@ function setupImageUpload() {
         reader.onload = (e) => {
             previewImg.src = e.target.result;
             previewImg.style.display = "block";
+            const placeholder = document.getElementById("previewPlaceholder");
+            if (placeholder) placeholder.style.display = "none";
         };
         reader.readAsDataURL(file);
     });

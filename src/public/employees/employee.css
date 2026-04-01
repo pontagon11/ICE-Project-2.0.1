@@ -1,5 +1,5 @@
 /* ============================================================
-   EMPLOYEES PAGE — page-specific styles only
+   EMPLOYEES PAGE ï¿½ page-specific styles only
    All shared: base.css | navbar.css | sidebar.css
    ============================================================ */
 
@@ -11,6 +11,19 @@
   object-fit: cover;
   border: 2px solid var(--gray-200);
   display: block;
+}
+
+.emp-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  border: 2px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  font-size: 18px;
 }
 
 /* -- Employee name + email cell -- */
