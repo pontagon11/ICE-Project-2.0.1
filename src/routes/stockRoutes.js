@@ -6,37 +6,23 @@ const pool = require('../config/db');
 router.get("/", async (req, res) => {
     try {
         const result = await pool.query(`
-            -- ดึง Current Stock จาก Products พร้อมคำนวณจาก Transactions
             SELECT 
                 p.pro_id as id,
                 p.pro_name as name,
                 'product' as type,
-                COALESCE(
-                    SUM(CASE WHEN t.tra_type = 'IN' THEN t.tra_qty ELSE 0 END) - 
-                    SUM(CASE WHEN t.tra_type = 'OUT' THEN t.tra_qty ELSE 0 END), 
-                    0
-                ) as stock,
-                false as qc_status
+                COALESCE(p.pro_qty, 0) as stock,
+                COALESCE(p.qc_status, false) as qc_status
             FROM products p
-            LEFT JOIN transactions t ON p.pro_id = t.tra_item_id AND t.tra_item_type = 'product'
-            GROUP BY p.pro_id, p.pro_name
             
             UNION ALL
             
-            -- ดึง Current Stock จาก Materials พร้อมคำนวณจาก Transactions
             SELECT 
                 m.mat_id as id,
                 m.mat_name as name,
                 'material' as type,
-                COALESCE(
-                    SUM(CASE WHEN t.tra_type = 'IN' THEN t.tra_qty ELSE 0 END) - 
-                    SUM(CASE WHEN t.tra_type = 'OUT' THEN t.tra_qty ELSE 0 END), 
-                    0
-                ) as stock,
-                false as qc_status
+                COALESCE(m.mat_qty, 0) as stock,
+                COALESCE(m.qc_status, false) as qc_status
             FROM materials m
-            LEFT JOIN transactions t ON m.mat_id = t.tra_item_id AND t.tra_item_type = 'material'
-            GROUP BY m.mat_id, m.mat_name
             
             ORDER BY name ASC
         `);

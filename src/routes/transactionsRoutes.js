@@ -24,8 +24,8 @@ router.get("/", async (req, res) => {
             COALESCE(p.pro_no, m.mat_no) AS item_no
         FROM transactions t
         LEFT JOIN employees e ON t.emp_id = e.emp_id
-        LEFT JOIN products p ON t.tra_item_id = p.pro_id AND t.tra_item_type = 'product'
-        LEFT JOIN materials m ON t.tra_item_id = m.mat_id AND t.tra_item_type = 'material'
+        LEFT JOIN products p ON t.tra_item_id = p.pro_id AND LOWER(t.tra_item_type) IN ('product', 'products')
+        LEFT JOIN materials m ON t.tra_item_id = m.mat_id AND LOWER(t.tra_item_type) IN ('material', 'materials')
         WHERE 1=1
     `;
 
@@ -74,6 +74,24 @@ router.get("/item/:type/:id", async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         res.status(500).json({ message: "Error fetching item transaction history" });
+    }
+});
+
+// [GET] /:id - ดึงข้อมูลธุรกรรมรายตัว (สำหรับหน้า Edit)
+router.get("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            `SELECT * FROM transactions WHERE tra_id = $1`,
+            [id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "ไม่พบข้อมูลรายการนี้" });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error("Get transaction by ID error:", err.message);
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
     }
 });
 
