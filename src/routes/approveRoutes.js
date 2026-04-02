@@ -5,10 +5,21 @@ const { isAuthenticated } = require('../middleware/auth');
 
 /**
  * [GET] /approve/pending
- * ดึงรายการใบสั่งซื้อทั้งหมดที่รอการอนุมัติ (Status = 'PENDING')
+ * ดึงรายการใบสั่งซื้อตามสถานะ (รองรับ ?status= query param)
  */
 router.get("/pending", isAuthenticated, async (req, res) => {
     try {
+        const statusFilter = (req.query.status || 'PENDING').toUpperCase();
+        
+        let whereClause = 'WHERE UPPER(p.status) = $1';
+        let values = [statusFilter];
+        
+        // ถ้าเลือก All ให้ดึงทั้งหมด
+        if (!statusFilter || statusFilter === 'ALL') {
+            whereClause = '';
+            values = [];
+        }
+
         const result = await pool.query(`
             SELECT 
                 p.po_id, 
@@ -21,10 +32,10 @@ router.get("/pending", isAuthenticated, async (req, res) => {
             FROM purchase p
             LEFT JOIN employees e ON p.emp_id = e.emp_id
             LEFT JOIN purchase_detail pd ON p.po_id = pd.po_id
-            WHERE p.status = 'PENDING'
+            ${whereClause}
             GROUP BY p.po_id, p.po_no, p.po_date, p.status, p.tra_note, e.emp_fname, e.emp_lname
             ORDER BY p.po_date DESC
-        `);
+        `, values);
         res.json(result.rows);
     } catch (err) {
         console.error("Fetch Pending Error:", err);

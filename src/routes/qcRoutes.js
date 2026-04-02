@@ -65,7 +65,29 @@ router.post('/', isAuthenticated, async (req, res) => {
     }
 });
 
-// [PUT] /:id - อัปเดตผล QC (pass / fail)
+// [PUT] /pass/:id - อัปเดตผล QC เป็น pass
+router.put('/pass/:id', isAuthenticated, async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('UPDATE qc SET qc_status = $1 WHERE qc_id = $2', ['pass', id]);
+        res.json({ message: 'อัปเดตผล QC สำเร็จ' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating QC' });
+    }
+});
+
+// [PUT] /fail/:id - อัปเดตผล QC เป็น fail
+router.put('/fail/:id', isAuthenticated, async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('UPDATE qc SET qc_status = $1 WHERE qc_id = $2', ['fail', id]);
+        res.json({ message: 'อัปเดตผล QC สำเร็จ' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating QC' });
+    }
+});
+
+// [PUT] /:id - อัปเดตผล QC (pass / fail) - generic
 router.put('/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     const { qc_status } = req.body;

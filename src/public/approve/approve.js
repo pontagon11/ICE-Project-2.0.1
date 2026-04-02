@@ -18,14 +18,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("statusFilter")?.addEventListener("change", loadApproveList);
 });
 
-/* ====================== LOAD PENDING PO ====================== */
+/* ====================== LOAD PO LIST ====================== */
 async function loadApproveList() {
     const tableBody = document.getElementById("approveTable");
-    if (tableBody) tableBody.innerHTML = `<tr><td colspan="4" class="text-center">⌛ Loading pending approvals...</td></tr>`;
+    if (tableBody) tableBody.innerHTML = `<tr><td colspan="4" class="text-center">⌛ Loading...</td></tr>`;
 
     try {
-        // ใช้ backtick (`) แทนฟันหนู เพื่อให้ตัวแปร ${API_APPROVE} ทำงาน
-        const res = await fetch(`${API_APPROVE}/pending`, { credentials: "include" });
+        const statusFilter = document.getElementById("statusFilter")?.value || "pending";
+        const res = await fetch(`${API_APPROVE}/pending?status=${statusFilter}`, { credentials: "include" });
         const data = await res.json();
 
         if (!res.ok) {
@@ -54,26 +54,36 @@ function renderTable(data) {
         if (shownIds.has(p.po_id)) return;
         shownIds.add(p.po_id);
 
+        const statusClean = (p.status || '').toUpperCase();
+        const statusClass = statusClean === 'PENDING' ? 'status-pending' :
+                            statusClean === 'APPROVED' ? 'status-approved' :
+                            statusClean === 'REJECTED' ? 'status-rejected' :
+                            statusClean === 'RECEIVED' ? 'status-received' : '';
+
+        const isPending = statusClean === 'PENDING';
+
         html += `
             <tr>
                 <td><strong>${p.po_no}</strong></td>
                 <td>${p.requester_name || "-"}</td> 
                 <td>
-                    <span class="status-pending">⌛ ${p.status}</span>
+                    <span class="${statusClass}">${statusClean}</span>
                 </td>
                 <td>
+                    ${isPending ? `
                     <button class="btn-approve" onclick="handleApprove(${p.po_id}, this)">
                         Approve
                     </button>
                     <button class="btn-reject" onclick="handleReject(${p.po_id}, this)" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-left: 5px;">
                         Reject
                     </button>
+                    ` : '-'}
                 </td>
             </tr>
         `;
     });
 
-    tableBody.innerHTML = html || `<tr><td colspan="4" class="text-center">ไม่มีรายการรออนุมัติในขณะนี้</td></tr>`;
+    tableBody.innerHTML = html || `<tr><td colspan="4" class="text-center">ไม่มีรายการในสถานะนี้</td></tr>`;
 }
 
 /* ====================== EXECUTE APPROVE ====================== */

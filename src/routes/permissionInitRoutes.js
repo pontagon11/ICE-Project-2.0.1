@@ -11,48 +11,49 @@ router.post("/setup-permissions", async (req, res) => {
     try {
         // 1. กำหนดสิทธิ์ที่ต้องการ
         const requiredPermissions = [
-            { perm_name: "view_dashboard", perm_desc: "ดูหน้าแรก" },
-            { perm_name: "view_stock", perm_desc: "ดูข้อมูลคลังสินค้า" },
-            { perm_name: "view_stock_summary", perm_desc: "ดูสรุปคลัง" },
-            { perm_name: "view_materials", perm_desc: "ดูวัตถุดิบ" },
-            { perm_name: "create_purchase", perm_desc: "สร้างใบสั่งซื้อ" },
-            { perm_name: "view_purchase", perm_desc: "ดูใบสั่งซื้อ" },
-            { perm_name: "edit_purchase", perm_desc: "แก้ไขใบสั่งซื้อ" },
-            { perm_name: "approve_po", perm_desc: "อนุมัติใบสั่งซื้อ" },
-            { perm_name: "create_products", perm_desc: "สร้างสินค้า" },
-            { perm_name: "view_products", perm_desc: "ดูสินค้า" },
-            { perm_name: "edit_products", perm_desc: "แก้ไขสินค้า" },
-            { perm_name: "create_qc", perm_desc: "สร้าง QC" },
-            { perm_name: "view_qc", perm_desc: "ดู QC" },
-            { perm_name: "view_transactions", perm_desc: "ดูธุรกรรม" },
-            { perm_name: "create_transactions", perm_desc: "สร้างธุรกรรม" },
-            { perm_name: "edit_transactions", perm_desc: "แก้ไขธุรกรรม" },
-            { perm_name: "create_employee", perm_desc: "สร้างพนักงาน" },
-            { perm_name: "view_employee", perm_desc: "ดูพนักงาน" },
-            { perm_name: "edit_employee", perm_desc: "แก้ไขพนักงาน" },
-            { perm_name: "create_bom", perm_desc: "สร้าง BOM" },
-            { perm_name: "view_bom", perm_desc: "ดู BOM" },
-            { perm_name: "edit_bom", perm_desc: "แก้ไข BOM" },
-            { perm_name: "manage_permissions", perm_desc: "จัดการสิทธิ์" },
-            { perm_name: "create_materials", perm_desc: "สร้างวัตถุดิบ" },
-            { perm_name: "edit_materials", perm_desc: "แก้ไขวัตถุดิบ" }
+            "view_dashboard",
+            "view_stock",
+            "view_stock_summary",
+            "view_materials",
+            "create_purchase",
+            "view_purchase",
+            "edit_purchase",
+            "approve_po",
+            "create_products",
+            "view_products",
+            "edit_products",
+            "create_qc",
+            "view_qc",
+            "view_transactions",
+            "create_transactions",
+            "edit_transactions",
+            "create_employee",
+            "view_employee",
+            "edit_employee",
+            "create_bom",
+            "view_bom",
+            "edit_bom",
+            "manage_permissions",
+            "create_materials",
+            "edit_materials",
+            "approve_qc"
         ];
 
         let created = 0;
         let skipped = 0;
 
         // 2. เช็คและสร้างสิทธิ์แต่ละตัว
-        for (const perm of requiredPermissions) {
+        for (const permName of requiredPermissions) {
             const existCheck = await pool.query(
                 "SELECT perm_id FROM public.permissions WHERE perm_name = $1",
-                [perm.perm_name]
+                [permName]
             );
 
             if (existCheck.rows.length === 0) {
                 // สร้างสิทธิ์ใหม่
                 await pool.query(
-                    "INSERT INTO public.permissions (perm_name, perm_desc) VALUES ($1, $2)",
-                    [perm.perm_name, perm.perm_desc]
+                    "INSERT INTO public.permissions (perm_name) VALUES ($1)",
+                    [permName]
                 );
                 created++;
             } else {

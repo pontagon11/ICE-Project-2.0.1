@@ -69,8 +69,8 @@ function renderStockTable(data) {
     data.forEach((item, index) => {
         const typeClass = item.type === "product" ? "badge-product" : "badge-material";
         const qty = Number(item.stock || 0);
-        const stockClass = qty <= 0 ? "stock-low" : "stock-ok";
-        const stockLabel = qty <= 0 ? "Low / Empty" : "OK";
+        const stockClass = qty <= 10 ? "stock-low" : "stock-ok";
+        const stockLabel = qty <= 10 ? "Low / Empty" : "OK";
 
         html += `
             <tr>

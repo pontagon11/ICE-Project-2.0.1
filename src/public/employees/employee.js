@@ -169,6 +169,30 @@ async function deleteEmployee(id) {
     }
 }
 
+/* ====================== POPULATE DROPDOWN FILTERS ====================== */
+function populateFilters(employees) {
+    const deptFilter = document.getElementById("deptFilter");
+    const roleFilter = document.getElementById("roleFilter");
+
+    if (deptFilter) {
+        const deptMap = new Map();
+        employees.forEach(e => { if (e.dept_id) deptMap.set(String(e.dept_id), e.dept_name || ''); });
+        deptFilter.innerHTML = '<option value="">All Departments</option>';
+        deptMap.forEach((name, id) => {
+            deptFilter.innerHTML += `<option value="${id}">${name}</option>`;
+        });
+    }
+
+    if (roleFilter) {
+        const roleMap = new Map();
+        employees.forEach(e => { if (e.role_id) roleMap.set(String(e.role_id), e.role_name || ''); });
+        roleFilter.innerHTML = '<option value="">All Roles</option>';
+        roleMap.forEach((name, id) => {
+            roleFilter.innerHTML += `<option value="${id}">${name}</option>`;
+        });
+    }
+}
+
 /* ====================== AUTH HELPERS ====================== */
 function getAuthHeaders() {
     const token = localStorage.getItem("token");

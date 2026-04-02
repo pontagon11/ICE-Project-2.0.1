@@ -9,10 +9,10 @@ let allPermissions = []; // เก็บสิทธิ์ทั้งหมด�
 // โครงสร้างกลุ่มสิทธิ์สำหรับจัดหน้าจอ (UI Mapping)
 const GROUPS = {
   "📊 Dashboard": ["view_dashboard"],
-  "📦 Stock": ["view_stock", "view_stock_summary", "view_materials"],
+  "📦 Stock": ["view_stock", "view_stock_summary", "view_materials", "create_materials", "edit_materials"],
   "🛒 Purchase": ["create_purchase", "view_purchase", "edit_purchase", "approve_po"],
   "📦 Products": ["create_products", "view_products", "edit_products"],
-  "🧪 QC": ["create_qc", "view_qc"],
+  "🧪 QC": ["create_qc", "view_qc", "approve_qc"],
   "🧾 Transactions": ["view_transactions", "create_transactions", "edit_transactions"],
   "👥 Employees": ["create_employee", "view_employee", "edit_employee"],
   "📐 BOM": ["create_bom", "view_bom", "edit_bom"],

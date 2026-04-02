@@ -129,8 +129,16 @@ router.put("/receive/:id", async (req, res) => {
 
         // 1. ตรวจสอบสถานะก่อน
         const checkStatus = await client.query("SELECT status FROM purchase WHERE po_id = $1", [id]);
-        if (checkStatus.rows[0].status === 'RECEIVED') {
+        const currentStatus = checkStatus.rows[0]?.status;
+        if (currentStatus === 'RECEIVED') {
+            await client.query("ROLLBACK");
+            client.release();
             return res.status(400).json({ message: "รายการนี้ถูกรับเข้าคลังไปแล้ว" });
+        }
+        if (currentStatus !== 'APPROVED') {
+            await client.query("ROLLBACK");
+            client.release();
+            return res.status(400).json({ message: "สามารถรับเข้าคลังได้เฉพาะใบสั่งซื้อที่ผ่านการอนุมัติแล้ว" });
         }
 
         // 2. อัปเดตสถานะเป็น 'received'
@@ -157,6 +165,11 @@ router.put("/receive/:id", async (req, res) => {
                 empId,
                 `Receive from PO #${id}`
             ]);
+            // อัปเดตยอดสต็อคในตาราง materials
+            await client.query(
+                'UPDATE materials SET mat_qty = COALESCE(mat_qty, 0) + $1 WHERE mat_id = $2',
+                [item.qty, item.mat_id]
+            );
             nextTraNo += 1;
         }
 

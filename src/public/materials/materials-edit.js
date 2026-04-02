@@ -60,8 +60,7 @@
 
         // แสดงรูปภาพเดิม (ถ้ามี)
         if (m.mat_img) {
-            // ปรับ Path ให้ตรงกับโฟลเดอร์ที่เก็บรูปใน Server
-            previewImg.src = m.mat_img.startsWith('http') ? m.mat_img : `/uploads/materials/${m.mat_img}`;
+            previewImg.src = m.mat_img.startsWith('http') || m.mat_img.startsWith('/') ? m.mat_img : `/img/materials/${m.mat_img}`;
             previewImg.style.display = "block";
         }
 

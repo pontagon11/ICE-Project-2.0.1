@@ -22,22 +22,19 @@ const upload = multer({ storage: storage });
    API ENDPOINTS
    ========================================== */
 
-// [GET] / - ดึงรายการสินค้าทั้งหมด + ยอดคงเหลือ
+// [GET] / - ดึงรายการสินค้าทั้งหมด
 router.get("/", async (req, res) => {
     try {
         const result = await pool.query(`
-            SELECT 
-                p.*, 
-                COALESCE(v.balance, 0) as pro_qty -- ใช้คอลัมน์จริงจาก v_stock_balance
-            FROM products p
-            LEFT JOIN v_stock_balance v ON p.pro_id = v.item_id AND v.item_type = 'product'
-            ORDER BY p.pro_id DESC
+            SELECT * FROM products ORDER BY pro_id DESC
         `);
         
         // ปรับ Path รูปภาพให้ Frontend (products.js) แสดงผลได้ทันที
         const data = result.rows.map(item => ({
             ...item,
-            pro_img: item.pro_img ? `/img/products/${item.pro_img}` : null
+            pro_img: item.pro_img
+                ? (item.pro_img.startsWith('/') || item.pro_img.startsWith('http') ? item.pro_img : `/img/products/${item.pro_img}`)
+                : null
         }));
         
         res.json(data);
@@ -56,7 +53,9 @@ router.get("/:id", async (req, res) => {
         
         const product = result.rows[0];
         // แปลง path รูปเพื่อให้ previewImg.src ทำงานได้
-        if (product.pro_img) product.pro_img = `/img/products/${product.pro_img}`;
+        if (product.pro_img && !product.pro_img.startsWith('/') && !product.pro_img.startsWith('http')) {
+            product.pro_img = `/img/products/${product.pro_img}`;
+        }
         
         res.json(product);
     } catch (err) {
@@ -66,19 +65,18 @@ router.get("/:id", async (req, res) => {
 
 // [POST] / - เพิ่มสินค้าใหม่
 router.post("/", upload.single('pro_img'), async (req, res) => {
-    // รับค่าตามชื่อที่ส่งมาจาก FormData ใน products-add.js
-    const { pro_name, pro_weight, pro_price, pro_status } = req.body;
+    const { pro_name, pro_weight, pro_price, pro_qty, pro_status } = req.body;
     const pro_img = req.file ? req.file.filename : null;
 
     try {
-        // สร้าง pro_no อัตโนมัติ (เช่น P-0001)
-        const countRes = await pool.query("SELECT COUNT(*) FROM products");
-        const pro_no = `P-${(parseInt(countRes.rows[0].count) + 1).toString().padStart(4, '0')}`;
+        // สร้าง pro_no อัตโนมัติ (ใช้ MAX เพื่อป้องกัน duplicate)
+        const maxRes = await pool.query("SELECT COALESCE(MAX(pro_id), 0) + 1 AS next_id FROM products");
+        const pro_no = `P-${maxRes.rows[0].next_id.toString().padStart(4, '0')}`;
 
         await pool.query(
-            `INSERT INTO products (pro_no, pro_name, pro_weight, pro_price, pro_status, pro_img) 
-             VALUES ($1, $2, $3, $4, $5, $6)`,
-            [pro_no, pro_name, pro_weight || 0, pro_price || 0, pro_status, pro_img]
+            `INSERT INTO products (pro_no, pro_name, pro_weight, pro_price, pro_qty, pro_status, pro_img) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [pro_no, pro_name, pro_weight || 0, pro_price || 0, pro_qty || 0, pro_status, pro_img]
         );
         res.status(201).json({ message: "เพิ่มสินค้าใหม่สำเร็จ" });
     } catch (err) {
@@ -90,19 +88,18 @@ router.post("/", upload.single('pro_img'), async (req, res) => {
 // [PUT] /:id - แก้ไขข้อมูลสินค้า
 router.put("/:id", upload.single('pro_img'), async (req, res) => {
     const { id } = req.params;
-    const { pro_name, pro_weight, pro_price, pro_status } = req.body;
+    const { pro_name, pro_weight, pro_price, pro_qty, pro_status } = req.body;
     
     try {
         let query = "";
         let params = [];
 
         if (req.file) {
-            // อัปเดตรูปใหม่ + ลบรูปเก่า (Optional แต่อนะนำ)
-            query = `UPDATE products SET pro_name=$1, pro_weight=$2, pro_price=$3, pro_status=$4, pro_img=$5 WHERE pro_id=$6`;
-            params = [pro_name, pro_weight, pro_price, pro_status, req.file.filename, id];
+            query = `UPDATE products SET pro_name=$1, pro_weight=$2, pro_price=$3, pro_qty=$4, pro_status=$5, pro_img=$6 WHERE pro_id=$7`;
+            params = [pro_name, pro_weight, pro_price, pro_qty || 0, pro_status, req.file.filename, id];
         } else {
-            query = `UPDATE products SET pro_name=$1, pro_weight=$2, pro_price=$3, pro_status=$4 WHERE pro_id=$5`;
-            params = [pro_name, pro_weight, pro_price, pro_status, id];
+            query = `UPDATE products SET pro_name=$1, pro_weight=$2, pro_price=$3, pro_qty=$4, pro_status=$5 WHERE pro_id=$6`;
+            params = [pro_name, pro_weight, pro_price, pro_qty || 0, pro_status, id];
         }
 
         await pool.query(query, params);

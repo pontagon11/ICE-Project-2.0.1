@@ -77,7 +77,7 @@ router.get("/item/:type/:id", async (req, res) => {
     }
 });
 
-// [POST] / - บันทึกธุรกรรมใหม่
+// [POST] / - บันทึกธุรกรรมใหม่ + อัปเดตยอดสต็อคใน DB
 router.post("/", async (req, res) => {
     const { type, itemType, itemId, qty, note } = req.body;
     const empId = req.session?.user?.id || null;
@@ -95,6 +95,24 @@ router.post("/", async (req, res) => {
              VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
             [tra_no, itemId, itemType, type, qty, empId, note || null]
         );
+
+        // อัปเดตยอดสต็อคในตารางต้นทาง (materials/products)
+        const normalType = type.toUpperCase();
+        const normalItemType = itemType.toLowerCase().replace(/s$/, ''); // materials -> material
+
+        if (normalItemType === 'material') {
+            if (normalType === 'IN') {
+                await pool.query('UPDATE materials SET mat_qty = COALESCE(mat_qty, 0) + $1 WHERE mat_id = $2', [qty, itemId]);
+            } else if (normalType === 'OUT') {
+                await pool.query('UPDATE materials SET mat_qty = COALESCE(mat_qty, 0) - $1 WHERE mat_id = $2', [qty, itemId]);
+            }
+        } else if (normalItemType === 'product') {
+            if (normalType === 'IN') {
+                await pool.query('UPDATE products SET pro_qty = COALESCE(pro_qty, 0) + $1 WHERE pro_id = $2', [qty, itemId]);
+            } else if (normalType === 'OUT') {
+                await pool.query('UPDATE products SET pro_qty = COALESCE(pro_qty, 0) - $1 WHERE pro_id = $2', [qty, itemId]);
+            }
+        }
 
         res.json({ message: "บันทึกรายการสำเร็จ" });
     } catch (err) {

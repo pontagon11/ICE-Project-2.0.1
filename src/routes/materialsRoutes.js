@@ -57,19 +57,18 @@ router.get("/:id", async (req, res) => {
 
 // [POST] / - เพิ่มวัตถุดิบใหม่
 router.post("/", upload.single('mat_img'), async (req, res) => {
-    // รับค่าให้ตรงกับ FormData ใน materials-add.js
-    const { mat_name, mat_weight, mat_price, mat_size, mat_status } = req.body;
+    const { mat_name, mat_weight, mat_price, mat_size, mat_qty, mat_status } = req.body;
     const mat_img = req.file ? req.file.filename : null;
 
     try {
-        // สร้างรหัส MAT-XXXX อัตโนมัติ
-        const countRes = await pool.query("SELECT COUNT(*) FROM materials");
-        const mat_no = `MAT-${(parseInt(countRes.rows[0].count) + 1).toString().padStart(4, '0')}`;
+        // สร้างรหัส MAT-XXXX อัตโนมัติ (ใช้ MAX ป้องกัน duplicate)
+        const maxRes = await pool.query("SELECT COALESCE(MAX(mat_id), 0) + 1 AS next_id FROM materials");
+        const mat_no = `MAT-${maxRes.rows[0].next_id.toString().padStart(4, '0')}`;
 
         const result = await pool.query(
-            `INSERT INTO materials (mat_no, mat_name, mat_weight, mat_price, mat_size, mat_status, mat_img) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-            [mat_no, mat_name, mat_weight || 0, mat_price || 0, mat_size, mat_status, mat_img]
+            `INSERT INTO materials (mat_no, mat_name, mat_weight, mat_price, mat_size, mat_qty, mat_status, mat_img) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+            [mat_no, mat_name, mat_weight || 0, mat_price || 0, mat_size, mat_qty || 0, mat_status, mat_img]
         );
         res.json({ message: "เพิ่มวัตถุดิบสำเร็จ", data: result.rows[0] });
     } catch (err) {
@@ -81,18 +80,18 @@ router.post("/", upload.single('mat_img'), async (req, res) => {
 // [PUT] /:id - แก้ไขข้อมูล
 router.put("/:id", upload.single('mat_img'), async (req, res) => {
     const { id } = req.params;
-    const { mat_name, mat_weight, mat_price, mat_size, mat_status } = req.body;
+    const { mat_name, mat_weight, mat_price, mat_size, mat_qty, mat_status } = req.body;
 
     try {
         let query = "";
         let params = [];
 
         if (req.file) {
-            query = `UPDATE materials SET mat_name=$1, mat_weight=$2, mat_price=$3, mat_size=$4, mat_status=$5, mat_img=$6 WHERE mat_id=$7`;
-            params = [mat_name, mat_weight, mat_price, mat_size, mat_status, req.file.filename, id];
+            query = `UPDATE materials SET mat_name=$1, mat_weight=$2, mat_price=$3, mat_size=$4, mat_qty=$5, mat_status=$6, mat_img=$7 WHERE mat_id=$8`;
+            params = [mat_name, mat_weight, mat_price, mat_size, mat_qty || 0, mat_status, req.file.filename, id];
         } else {
-            query = `UPDATE materials SET mat_name=$1, mat_weight=$2, mat_price=$3, mat_size=$4, mat_status=$5 WHERE mat_id=$6`;
-            params = [mat_name, mat_weight, mat_price, mat_size, mat_status, id];
+            query = `UPDATE materials SET mat_name=$1, mat_weight=$2, mat_price=$3, mat_size=$4, mat_qty=$5, mat_status=$6 WHERE mat_id=$7`;
+            params = [mat_name, mat_weight, mat_price, mat_size, mat_qty || 0, mat_status, id];
         }
 
         await pool.query(query, params);
@@ -106,11 +105,15 @@ router.put("/:id", upload.single('mat_img'), async (req, res) => {
 // [DELETE] /:id
 router.delete("/:id", async (req, res) => {
     try {
+        // ลบข้อมูลที่เกี่ยวข้องก่อน (transactions, qc, purchase_detail)
+        await pool.query("DELETE FROM transactions WHERE tra_item_id = $1 AND tra_item_type = 'material'", [req.params.id]);
+        await pool.query("DELETE FROM qc WHERE item_id = $1 AND item_type = 'material'", [req.params.id]);
+        await pool.query("DELETE FROM purchase_detail WHERE mat_id = $1", [req.params.id]);
         await pool.query("DELETE FROM materials WHERE mat_id = $1", [req.params.id]);
         res.json({ message: "ลบวัตถุดิบสำเร็จ" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });
+        res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ: " + err.message });
     }
 });
 

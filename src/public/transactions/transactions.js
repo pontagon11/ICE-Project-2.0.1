@@ -86,7 +86,7 @@ function renderTable(transactions) {
       <td>${t.tra_created_at ? new Date(t.tra_created_at).toLocaleDateString('th-TH') : "-"}</td>
       <td>${t.tra_note || "-"}</td>
       <td class="text-center">
-        ${canEdit ? `<button class="edit-btn" onclick="location.href='/transactions/transactions-add.html?ref=${t.tra_id}'" title="View"><i class="fa fa-eye"></i></button>` : "-"}
+        ${canEdit ? `<button class="edit-btn" onclick="location.href='/transactions/transactions-edit.html?id=${t.tra_id}'" title="View Details"><i class="fa fa-eye"></i></button>` : "-"}
       </td>
     `;
     fragment.appendChild(tr);

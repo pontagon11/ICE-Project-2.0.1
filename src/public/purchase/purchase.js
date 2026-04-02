@@ -84,7 +84,7 @@ function renderTable(dataToRender) {
 
     dataToRender.forEach((p) => {
         const statusClean = (p.status || "pending").toLowerCase();
-        const canReceive = hasPermission("edit_purchase") && statusClean !== "received";
+        const canReceive = hasPermission("edit_purchase") && statusClean !== "received" && statusClean !== "rejected" && statusClean !== "pending";
 
         html += `
             <tr>
