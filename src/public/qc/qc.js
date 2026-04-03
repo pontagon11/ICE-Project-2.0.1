@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("typeFilter")?.addEventListener("change", applyFilters);
   
   // ค้นหาอัตโนมัติขณะพิมพ์
+  document.getElementById("searchInput")?.addEventListener("input", applyFilters);
   document.getElementById("searchInput")?.addEventListener("keyup", (e) => {
     if (e.key === "Enter") applyFilters();
   });
@@ -102,7 +103,7 @@ function applyFilters() {
   const filtered = qcData.filter(item => {
     const matchName = (item.name || "").toLowerCase().includes(keyword) || 
                       (item.qc_no || "").toLowerCase().includes(keyword);
-    const matchType = type === "all" || item.item_type === type;
+    const matchType = type === "all" || (item.item_type || "").toLowerCase() === type.toLowerCase();
     return matchName && matchType;
   });
 

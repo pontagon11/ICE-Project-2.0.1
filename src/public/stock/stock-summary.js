@@ -87,7 +87,7 @@ function renderTable() {
   filteredData.forEach(item => {
     const totalIn = Number(item.total_in) || 0;
     const totalOut = Number(item.total_out) || 0;
-    const balance = totalIn - totalOut;
+    const balance = Number(item.balance) || 0;
 
     // เลือกสี Badge ตามประเภท
     const badgeClass = item.tra_item_type === "product" ? "badge-product" : "badge-material";

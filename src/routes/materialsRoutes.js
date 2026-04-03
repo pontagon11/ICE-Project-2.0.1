@@ -105,8 +105,9 @@ router.put("/:id", upload.single('mat_img'), async (req, res) => {
 // [DELETE] /:id
 router.delete("/:id", async (req, res) => {
     try {
-        // ลบข้อมูลที่เกี่ยวข้องก่อน (transactions, qc, purchase_detail)
-        await pool.query("DELETE FROM transactions WHERE tra_item_id = $1 AND tra_item_type = 'material'", [req.params.id]);
+        // ลบข้อมูลที่เกี่ยวข้องก่อน (bom_details, transactions, qc, purchase_detail)
+        await pool.query("DELETE FROM bom_details WHERE mat_id = $1", [req.params.id]);
+        await pool.query("DELETE FROM transactions WHERE tra_item_id = $1 AND LOWER(tra_item_type) IN ('material', 'materials')", [req.params.id]);
         await pool.query("DELETE FROM qc WHERE item_id = $1 AND item_type = 'material'", [req.params.id]);
         await pool.query("DELETE FROM purchase_detail WHERE mat_id = $1", [req.params.id]);
         await pool.query("DELETE FROM materials WHERE mat_id = $1", [req.params.id]);

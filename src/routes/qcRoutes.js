@@ -70,6 +70,18 @@ router.put('/pass/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     try {
         await pool.query('UPDATE qc SET qc_status = $1 WHERE qc_id = $2', ['pass', id]);
+
+        // อัปเดต qc_status ในตารางต้นทาง
+        const qcRow = await pool.query('SELECT item_id, item_type FROM qc WHERE qc_id = $1', [id]);
+        if (qcRow.rows.length > 0) {
+            const { item_id, item_type } = qcRow.rows[0];
+            if (item_type === 'product') {
+                await pool.query('UPDATE products SET qc_status = true WHERE pro_id = $1', [item_id]);
+            } else if (item_type === 'material') {
+                await pool.query('UPDATE materials SET qc_status = true WHERE mat_id = $1', [item_id]);
+            }
+        }
+
         res.json({ message: 'อัปเดตผล QC สำเร็จ' });
     } catch (err) {
         res.status(500).json({ message: 'Error updating QC' });
@@ -81,6 +93,18 @@ router.put('/fail/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
     try {
         await pool.query('UPDATE qc SET qc_status = $1 WHERE qc_id = $2', ['fail', id]);
+
+        // อัปเดต qc_status ในตารางต้นทาง
+        const qcRow = await pool.query('SELECT item_id, item_type FROM qc WHERE qc_id = $1', [id]);
+        if (qcRow.rows.length > 0) {
+            const { item_id, item_type } = qcRow.rows[0];
+            if (item_type === 'product') {
+                await pool.query('UPDATE products SET qc_status = false WHERE pro_id = $1', [item_id]);
+            } else if (item_type === 'material') {
+                await pool.query('UPDATE materials SET qc_status = false WHERE mat_id = $1', [item_id]);
+            }
+        }
+
         res.json({ message: 'อัปเดตผล QC สำเร็จ' });
     } catch (err) {
         res.status(500).json({ message: 'Error updating QC' });
